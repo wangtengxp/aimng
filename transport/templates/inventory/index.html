@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}商品库存{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  {% if g.user %}
+  <div class="container-xl">
+    <div class="col-4">
+      <div class="row g-2 align-items-center mb-n3">
+  <div class="col-2 col-sm-2 col-md-2 col-xl mb-3">
+<!--    <a class="btn btn-primary w-100" href="{{ url_for('product.manufacture') }}">生产商品</a>-->
+    </div>
+        <div class="col-2 col-sm-2 col-md-2 col-xl mb-3">
+<!--    <a class="btn btn-primary w-100" href="{{ url_for('transport.create') }}">创建发货单</a>-->
+        </div>
+        </div>
+      </div>
+  {% endif %}
+
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>商品名称</th>
+          <th>库存</th>
+          <th>单位</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for inventory in inventorys %}
+        <tr>
+          <td>{{inventory['name']}}</td>
+          <td>{{inventory['amount']}}</td>
+          {% if inventory['unit'] == 'bag'%}
+          <td>袋</td>
+          {% elif inventory['unit'] == 'kg' %}
+          <td>公斤</td>
+          {% else %}
+          <td>无</td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

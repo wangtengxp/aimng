@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}创建销售订单{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+  <form id="sellRecordForm" method="post">
+    <select name="product_id">
+      <option>请选择要销售的商品</option>
+      {% for product in sellCreateInfos.products %}
+      <option value="{{product['id']}}">{{product["name"]}}</option>
+      {% endfor %}
+    </select>
+      <select name="seller_id">
+      <option>请选择销售员</option>
+      {% for seller in sellCreateInfos.sellers %}
+      <option value="{{seller['id']}}">{{seller["name"]}}</option>
+      {% endfor %}
+    </select>
+      <select name="customer_id">
+      <option>请选择客户</option>
+      {% for customer in sellCreateInfos.customers %}
+      <option value="{{customer['id']}}">{{customer["name"]}}</option>
+      {% endfor %}
+    </select>
+    <input name="amount" id="amount" placeholder="请输入生产数量" required>
+    <input type="submit" value="确定">
+
+  </form>
+
+
+{% endblock %}
+
+

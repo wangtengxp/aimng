@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}销售员列表{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  {% if g.user %}
+  <div class="container-xl">
+    <div class="col-2">
+      <div class="row g-2 align-items-center mb-n3">
+  <div class="col-2 col-sm-2 col-md-2 col-xl mb-3">
+    <a class="btn btn-primary w-100" href="{{ url_for('seller.create') }}">新建销售员</a>
+  </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>销售员名称</th>
+          <th>手机</th>
+
+        </tr>
+      </thead>
+      <tbody>
+      {% for seller in sellers %}
+        <tr>
+          <td>{{seller['name']}}</td>
+          <td>{{seller['cellphone']}}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+{% endblock %}

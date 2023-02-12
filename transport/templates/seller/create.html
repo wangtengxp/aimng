@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}创建销售员{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+  <form id="sellerForm" method="post">
+    <label for="name">销售员名称</label>
+    <input name="name" id="name" value="{{ request.form['name'] }}" required>
+    <label>销售员手机</label>
+    <input name="cellphone" id="cellphone" value="{{ request.form['cellphone'] }}" required>
+    <input type="submit" value="保存">
+
+  </form>
+
+
+
+{% endblock %}
+
+

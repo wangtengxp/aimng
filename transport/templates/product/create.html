@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}创建商品{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+  <form id="productForm" method="post">
+    <label for="name">商品名称</label>
+    <input name="name" id="name" value="{{ request.form['name'] }}" required>
+    <label>单位</label>
+    <label for="bag">袋</label>
+    <input type="radio" name="unit" id="bag" value="bag"/>
+    <label for="kg">公斤</label>
+    <input type="radio" name="unit" id="kg" value="kg"/>
+    <label for="price">单价</label>
+    <input name="price" id="price" value="{{ request.form['price'] }}">
+    <label for="specification">规格</label>
+    <input name="specification" id="specification" value="{{ request.form['specification'] }}">
+    <input type="button" id="addMaterial" value="添加原材料">
+    <input type="submit" value="保存" class="submit">
+  </form>
+
+<script type="text/javascript">
+    $(document).ready(function (){
+      $("#addMaterial").click(function (){
+        $.ajax({
+          type:"POST",
+          url:"/material/getMaterials",
+          async:true,
+          dataType:"json",
+          success:function (data){
+            var selectionStr = "<select name=material>"
+            if(data&&data.length>0){
+              for(var i=0;i<data.length;i++){
+                var option="<option value="+data[i].id +">" +data[i].name+",剩余库存"+data[i].count+"</option>";
+                selectionStr+=option
+              }
+            }
+            selectionStr+="</select>"
+            var inputStr = "<input placeholder='请填写原材料消耗' name=materialCost required>"
+            $("#addMaterial").before(selectionStr+inputStr)
+          }
+        })
+      });
+    });
+    // $('.submit').click(function (){
+    //   var form = $('form')[0];
+    //     var formdata = new FormData(form);
+    //     $.ajax({
+    //         url: 'create',
+    //         data: formdata,
+    //         type: 'post',
+    //         dataType: "json",
+    //         contentType: false,
+    //         processData: false,
+    //         success: function (data) {
+    //             // code……
+    //         }
+    //     });
+    // });
+</script>
+
+
+{% endblock %}
+
+

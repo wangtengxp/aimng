@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}客户列表{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  {% if g.user %}
+  <div class="container-xl">
+    <div class="col-2">
+      <div class="row g-2 align-items-center mb-n3">
+  <div class="col-2 col-sm-2 col-md-2 col-xl mb-3">
+    <a class="btn btn-primary w-100" href="{{ url_for('customer.create') }}">新建客户</a>
+  </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>客户名称</th>
+          <th>手机</th>
+          <th>省份</th>
+          <th>城市</th>
+          <th>详细地址</th>
+
+        </tr>
+      </thead>
+      <tbody>
+      {% for customer in customers %}
+        <tr>
+          <td>{{customer['name']}}</td>
+          <td>{{customer['cellphone']}}</td>
+          <td>{{customer['province']}}</td>
+          <td>{{customer['city']}}</td>
+          <td>{{customer['address']}}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

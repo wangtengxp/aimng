@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}创建发货单{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+  <form id="sellRecordForm" method="post">
+    <select name="sell_record_id">
+      <option>请选择销售订单号</option>
+      {% for sellRecord in sellRecords %}
+      <option value="{{sellRecord['id']}}">{{sellRecord["id"]}}</option>
+      {% endfor %}
+    </select>
+    <input name="amount" id="amount" placeholder="请输入发货数量" required>
+    <input name="address" id="address" placeholder="目的地" required>
+    <input name="driver_name" id="driver_name" placeholder="司机姓名" required>
+    <input name="driver_cellphone" id="driver_cellphone" placeholder="司机手机号" required>
+
+    <input type="submit" value="确定">
+
+  </form>
+
+
+{% endblock %}
+
+

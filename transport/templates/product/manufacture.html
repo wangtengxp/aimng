@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}生产商品{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+  <form id="productForm" method="post">
+    <select name="product">
+      <option>请选择要生产的商品</option>
+      {% for product in products %}
+      <option value="{{product['id']}}">{{product["name"]}}</option>
+      {% endfor %}
+    </select>
+    <input name="amount" id="amount" placeholder="请输入生产数量" required>
+    <input type="submit" value="确定">
+
+  </form>
+
+
+{% endblock %}
+
+

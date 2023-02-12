@@ -1,0 +1,84 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} - transport</title>
+<head>
+  <link href="https://cdn.staticfile.org/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+  <script src="../static/jquery-3.6.3.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <!-- 新 Bootstrap5 核心 CSS 文件 -->
+
+
+    <!-- 最新的 Bootstrap5 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/5.1.3/js/bootstrap.min.js"></script>
+    <!-- popper.min.js 用于弹窗、提示、下拉菜单 -->
+    <script src="https://cdn.staticfile.org/popper.js/2.9.3/umd/popper.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='table.min.css') }}">
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1">-->
+</head>
+
+<body class="antialiased">
+<div class="container mt-3">
+<nav>
+  <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">爱农种业</h1>
+  <ul>
+    {% if g.user %}
+      <li><span>{{ g.user['username'] }}</span>
+      <li><a href="{{ url_for('auth.logout') }}">退出</a>
+    {% else %}
+      <li><a href="{{ url_for('auth.register') }}">注册用户</a>
+      <li><a href="{{ url_for('auth.login') }}">登录</a>
+    {% endif %}
+  </ul>
+</nav>
+</div>
+
+<div class="container mt-3">
+<nav class="navbar navbar-default" role="navigation" >
+<!--  <div class="container-fluid">-->
+    <div>
+      <ul class="nav nav-pills" id="menu">
+        {% if g.user['role']=='ADMIN' %}
+        <li class="nav-item"><a class="nav-link" href="{{url_for('material.index')}}">原材料</a></li>
+        <li class="nav-item"><a class="nav-link"  href="{{url_for('product.index')}}">商品列表</a></li>
+        {% endif %}
+        {% if g.user['role']=='STORE_MANAGER' or g.user['role']=='ADMIN'%}
+        <li class="nav-item"><a class="nav-link"  href="{{url_for('inventory.index')}}">库存</a></li>
+        {% endif %}
+        {% if g.user['role']=='ADMIN' %}
+        <li class="nav-item"><a class="nav-link"  href="{{url_for('customer.index')}}">客户信息</a></li>
+        <li class="nav-item"><a class="nav-link"  href="{{url_for('seller.index')}}">销售人员信息</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{url_for('sell_record.index')}}">销售订单</a></li>
+        <li class="nav-item"><a class="nav-link"  href="{{url_for('transport.index')}}">发货单</a></li>
+        {% endif %}
+      </ul>
+    </div>
+<!--  </div>-->
+</nav>
+  </div>
+
+<div class="container mt-3">
+<section class="content">
+  <header>
+
+    {% block header %}{% endblock %}
+  </header>
+  {% for message in get_flashed_messages() %}
+  <div class="flash"><span style="color: red">{{ message }}</span></div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</section>
+</div>
+</body>
+
+<script type="text/javascript">
+
+  var currentUrl = document.location.href;
+  var currentUrls = currentUrl.split("\/");
+  $("#menu a").each(function (){
+    var navHref = $(this).attr("href").split("\/");
+
+    if(currentUrls[3]==navHref[1]){
+      $(this).addClass("active");
+    }
+  });
+</script>

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}销售订单{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  {% if g.user %}
+  <div class="container-xl">
+    <div class="col-2">
+      <div class="row g-2 align-items-center mb-n3">
+  <div class="col-2 col-sm-2 col-md-2 col-xl mb-3">
+    <a class="btn btn-primary w-100" href="{{ url_for('sell_record.create') }}">新建销售订单</a>
+  </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>销售订单号</th>
+          <th>商品名称</th>
+          <th>创建时间</th>
+          <th>销售员</th>
+          <th>客户</th>
+          <th>销售数量</th>
+          <th>已发货数量</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for sellRecord in sellRecords %}
+        <tr>
+          <td>{{sellRecord['id']}}</td>
+          <td>{{sellRecord['product_name']}}</td>
+          <td>{{sellRecord['create_time']}}</td>
+          <td>{{sellRecord['seller_name']}}</td>
+          <td>{{sellRecord['customer_name']}}</td>
+          <td>{{sellRecord['amount']}}</td>
+          {% if sellRecord['transport_amount'] == None %}
+          <td>0</td>
+          {% else %}
+          <td>{{sellRecord['transported_amount']}}</td>
+          {% endif %}
+          <td><input type="button" onclick="deleteSellRecord({{sellRecord['id']}})" value="删除" id="{{sellRecord['id']}}" /></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+  function deleteSellRecord(id){
+    $.confirm({
+      title:'是否确认删除',
+      content:'确认删除吗',
+      buttons:{
+        确认:function (){
+          $.post("/sell_record/delete", {
+            "id" : id,
+          }, function(data) {
+            //成功，跳转到指定页面
+           }, 'json'
+          );
+          location.reload();
+        },
+        取消:function () {
+
+        }
+      }
+    });
+  }
+
+</script>
+
+{% endblock %}
