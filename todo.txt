@@ -1,3 +1,32 @@
 角色权限控制：超级管理员、仓库管理员
 
 运输模块身份证、驾驶证上传、签字
+
+
+server {
+    listen       80;
+    server_name  172.19.57.208;
+    charset      utf-8;
+    access_log  /var/log/nginx/host.access.log  main;
+    error_log  /var/log/nginx/host.access.log  warn;
+
+#    location / {
+#        #root   /usr/share/nginx/html;
+
+#        root   /var/www/mysite;
+#        index  index.html index.htm;
+#    }
+
+
+    location /{
+        root    /var/www/aimng;
+        index   index.html index.htm;
+
+        include uwsgi_params;
+        uwsgi_pass      127.0.0.1:5000;
+        uwsgi_param UWSGI_PYHOME        /var/www/mysite_venv;
+        uwsgi_param UWSGI_CHDIR         /var/www/aimng;
+        uwsgi_param PYTHONPATH          /var/www/aimng;
+        uwsgi_param UWSGI_MODULE        hello;
+        uwsgi_param UWSGI_CALLABLE      transport;
+        }
