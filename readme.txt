@@ -12,3 +12,6 @@ https://blog.csdn.net/shanmu0737/article/details/123741409
 
 激活虚拟环境：
 source mysite_env/bin/activate
+
+启动uwsgi
+uwsgi --ini /var/www/aimng/uwsgi.ini
