@@ -7,7 +7,7 @@ from transport.auth import login_required
 from transport.db import get_db
 import json
 
-bp = Blueprint('transport', __name__,url_prefix='/transport')
+bp = Blueprint('carriage', __name__,url_prefix='/carriage')
 
 @bp.route('/list')
 def index():
@@ -17,7 +17,7 @@ def index():
         ' FROM transport'
         ' ORDER BY id DESC'
     ).fetchall()
-    return render_template('transport/list.html', transports=transports)
+    return render_template('carriage/list.html', transports=transports)
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
@@ -49,11 +49,11 @@ def create():
             sellAmount=float(sellRecordRow['amount'])
             if newTransportedAmount>sellAmount:
                 flash('发货总量超过了销售数量，请确认')
-                return redirect(url_for('transport.index'))
+                return redirect(url_for('carriage.index'))
 
             db.execute('update sell_record set transported_amount=? where id=?',(newTransportedAmount,sell_record_id))
             db.commit()
-            return redirect(url_for('transport.index'))
+            return redirect(url_for('carriage.index'))
     db = get_db()
     sellRecords = db.execute('select id from sell_record order by id desc').fetchall()
-    return render_template('transport/create.html',sellRecords=sellRecords)
+    return render_template('carriage/create.html',sellRecords=sellRecords)

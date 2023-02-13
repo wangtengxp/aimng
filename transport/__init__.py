@@ -48,8 +48,8 @@ def create_app(test_config=None):
     from . import material
     app.register_blueprint(material.bp)
 
-    from . import transport
-    app.register_blueprint(transport.bp)
+    from . import carriage
+    app.register_blueprint(carriage.bp)
 
     from . import customer
     app.register_blueprint(customer.bp)
