@@ -2,8 +2,9 @@
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from flask import Flask
 
-app=create_app()
+app = Flask(__name__)
 if __name__=='__main__':
 
     app.run(host='0.0.0.0')
