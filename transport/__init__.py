@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-from . import db
+from transport import db
 from . import auth
 from . import blog
 from . import inventory
