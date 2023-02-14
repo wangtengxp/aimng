@@ -1,6 +1,12 @@
 import os
 
 from flask import Flask
+from . import db
+from . import auth
+from . import blog
+from . import inventory
+from . import product
+from . import material
 
 
 def create_app(test_config=None):
@@ -24,23 +30,23 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    from . import db
+
     db.init_app(app)
 
-    from . import auth
+
     app.register_blueprint(auth.bp)
 
-    from . import blog
+
     app.register_blueprint(blog.bp)
     app.add_url_rule('/', endpoint='index')
 
-    from . import inventory
+
     app.register_blueprint(inventory.bp)
 
-    from . import product
+
     app.register_blueprint(product.bp)
 
-    from . import material
+
     app.register_blueprint(material.bp)
 
     from . import carriage
