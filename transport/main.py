@@ -16,10 +16,8 @@ from customer import *
 from seller import *
 from sell_record import *
 
-
+app = Flask(__name__, instance_relative_config=True)
 def create_app(test_config=None):
-    # create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'transport.sqlite'),
@@ -71,8 +69,9 @@ def create_app(test_config=None):
 
     return app
 
-appx = create_app()
+
 if __name__=='__main__':
-    appx.run(host='0.0.0.0')
+    create_app()
+    app.run(host='0.0.0.0')
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
