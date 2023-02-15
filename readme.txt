@@ -15,3 +15,6 @@ source mysite_env/bin/activate
 
 启动uwsgi
 uwsgi --ini /var/www/aimng/uwsgi.ini
+
+启动gunicorn
+gunicorn -w 2 -b 0.0.0.0:5000 main:app
