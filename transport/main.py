@@ -5,7 +5,7 @@
 from flask import Flask
 from db import *
 from auth import *
-from blog import *
+# from blog import *
 from . import inventory
 from . import product
 from . import material
