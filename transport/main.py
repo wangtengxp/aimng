@@ -71,9 +71,8 @@ def create_app(test_config=None):
 
     return app
 
-app = create_app()
+appx = create_app()
 if __name__=='__main__':
-
-    app.run(host='0.0.0.0')
+    appx.run(host='0.0.0.0')
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
