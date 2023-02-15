@@ -3,12 +3,18 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from flask import Flask
+
+import auth
 from db import *
 from auth import *
-# from blog import *
-from . import inventory
-from . import product
-from . import material
+from blog import *
+from inventory import *
+from product import *
+from material import *
+from carriage import *
+from customer import *
+from seller import *
+from sell_record import *
 
 
 def create_app(test_config=None):
@@ -36,7 +42,7 @@ def create_app(test_config=None):
     db.init_app(app)
 
 
-    app.register_blueprint(auth.bp)
+    app.register_blueprint(auth.authBp)
 
 
     app.register_blueprint(blog.bp)
@@ -51,16 +57,16 @@ def create_app(test_config=None):
 
     app.register_blueprint(material.bp)
 
-    from . import carriage
+
     app.register_blueprint(carriage.bp)
 
-    from . import customer
+
     app.register_blueprint(customer.bp)
 
-    from . import seller
+
     app.register_blueprint(seller.bp)
 
-    from . import sell_record
+
     app.register_blueprint(sell_record.bp)
 
     return app

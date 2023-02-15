@@ -3,8 +3,8 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from transport.auth import login_required
-from transport.db import get_db
+from auth import login_required
+from db import get_db
 import json
 
 bp = Blueprint('material', __name__,url_prefix='/material')
