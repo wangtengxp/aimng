@@ -6,6 +6,10 @@ flask --app transport init-db
 
 启动
 flask --app transport --debug run
+flask --app transport run
+
+生产环境启动
+python main.py
 
 生产环境部署
 https://blog.csdn.net/shanmu0737/article/details/123741409

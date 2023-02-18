@@ -1,20 +1,17 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}原材料列表{% endblock %}</h1>
 
 {% endblock %}
 
 {% block content %}
 <div class="page-body">
+  <div class="layui-col-md9 site-content">
   {% if g.user %}
-<div class="container-xl">
-  <div class="col-6 col-sm-4 col-md-2 col-xl mb-3">
-    <a class="btn btn-primary w-100" href="{{ url_for('material.create') }}">创建原材料</a>
-    </div>
-  </div>
+    <a class="layui-btn layui-btn-normal" href="{{ url_for('material.create') }}">创建原材料</a>
+
   {% endif %}
-    <table class="table table-bordered">
+    <table class="layui-table" lay-even>
       <thead>
         <tr>
           <th>原材料名称</th>
@@ -27,11 +24,13 @@
         <tr>
           <td>{{material['name']}}</td>
           <td>{{material['count']}}</td>
-          <td><button class="btn btn-primary" data-bs-target="#modifyModal" data-bs-whatever="{{material['id']}}" data-bs-toggle="modal">修改</button></td>
+
+          <td><button class="layui-btn" data-bs-target="#modifyModal" data-bs-whatever="{{material['id']}}" data-bs-toggle="modal">修改</button></td>
         </tr>
       {% endfor %}
       </tbody>
     </table>
+  </div>
   </div>
 
 <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -94,6 +93,7 @@
         location.reload();
       });
     });
+
     // $('.submit').click(function (){
     //   var form = $('form')[0];
     //     var formdata = new FormData(form);

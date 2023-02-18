@@ -5,11 +5,17 @@
 {% endblock %}
 
 {% block content %}
-  <form method="post">
+<div class="page-body">
+  <div class="layui-col-md9 site-content">
+
+  <form class="layui-form" method="post">
     <label for="username">用户名</label>
     <input name="username" id="username" required>
     <label for="password">密码</label>
     <input type="password" name="password" id="password" required>
-    <input type="submit" value="Log In">
+    <input type="submit" value="登录">
   </form>
+  </div>
+</div>
+
 {% endblock %}

@@ -3,8 +3,8 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from auth import login_required
-from db import get_db
+from .auth import login_required
+from .db import get_db
 
 bp = Blueprint('blog', __name__)
 
@@ -17,7 +17,7 @@ def index():
     #     ' ORDER BY created DESC'
     # ).fetchall()
     # return render_template('blog/index.html', posts=posts)
-    return "Hello World"
+    return redirect(url_for('material.index'))
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required

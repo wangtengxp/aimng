@@ -12,51 +12,70 @@
     <script src="https://cdn.staticfile.org/twitter-bootstrap/5.1.3/js/bootstrap.min.js"></script>
     <!-- popper.min.js 用于弹窗、提示、下拉菜单 -->
     <script src="https://cdn.staticfile.org/popper.js/2.9.3/umd/popper.min.js"></script>
+
+  <link href="../static/layui/css/layui.css" rel="stylesheet">
+  <script src="../static/layui/layui.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='table.min.css') }}">
 <!--  <meta name="viewport" content="width=device-width, initial-scale=1">-->
 </head>
 
 <body class="antialiased">
-<div class="container mt-3">
-<nav>
-  <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">爱农种业</h1>
-  <ul>
-    {% if g.user %}
-      <li><span>{{ g.user['username'] }}</span>
-      <li><a href="{{ url_for('auth.logout') }}">退出</a>
-    {% else %}
-      <li><a href="{{ url_for('auth.register') }}">注册用户</a>
-      <li><a href="{{ url_for('auth.login') }}">登录</a>
-    {% endif %}
-  </ul>
-</nav>
-</div>
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="layui-logo layui-hide-xs layui-bg-black"><img src="../static/icon/logo.png" class="layui-nav-img">爱农种业</div>
+    <ul class="layui-nav layui-layout-right">
+      <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+        <a href="javascript:;">
 
-<div class="container mt-3">
-<nav class="navbar navbar-default" role="navigation" >
-<!--  <div class="container-fluid">-->
-    <div>
-      <ul class="nav nav-pills" id="menu">
+          {% if g.user %}
+      <span>{{ g.user['username'] }}</span>
+
+    {% endif %}
+        </a>
+        <dl class="layui-nav-child">
+          {% if g.user %}
+          <dd><a href="{{ url_for('auth.logout') }}">退出</a></dd>
+
+        {% else %}
+          <dd><a href="{{ url_for('auth.register') }}">注册用户</a></dd>
+          <dd><a href="{{ url_for('auth.login') }}">登录</a></dd>
+        {% endif %}
+        </dl>
+      </li>
+      <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
+        <a href="javascript:;">
+          <i class="layui-icon layui-icon-more-vertical"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree" lay-filter="test" id="menu">
+
         {% if g.user['role']=='ADMIN' %}
-        <li class="nav-item"><a class="nav-link" href="{{url_for('material.index')}}">原材料</a></li>
-        <li class="nav-item"><a class="nav-link"  href="{{url_for('product.index')}}">商品列表</a></li>
+        <li class="layui-nav-item"><a class="nav-link" href="{{url_for('material.index')}}">原材料</a></li>
+        <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('product.index')}}">商品列表</a></li>
         {% endif %}
         {% if g.user['role']=='STORE_MANAGER' or g.user['role']=='ADMIN'%}
-        <li class="nav-item"><a class="nav-link"  href="{{url_for('inventory.index')}}">库存</a></li>
+        <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('inventory.index')}}">库存</a></li>
         {% endif %}
         {% if g.user['role']=='ADMIN' %}
-        <li class="nav-item"><a class="nav-link"  href="{{url_for('customer.index')}}">客户信息</a></li>
-        <li class="nav-item"><a class="nav-link"  href="{{url_for('seller.index')}}">销售人员信息</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{url_for('sell_record.index')}}">销售订单</a></li>
-        <li class="nav-item"><a class="nav-link"  href="{{url_for('carriage.index')}}">发货单</a></li>
+        <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('customer.index')}}">客户信息</a></li>
+        <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('seller.index')}}">销售人员信息</a></li>
+        <li class="layui-nav-item"><a class="nav-link" href="{{url_for('sell_record.index')}}">销售订单</a></li>
+        <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('carriage.index')}}">发货单</a></li>
         {% endif %}
       </ul>
     </div>
-<!--  </div>-->
-</nav>
   </div>
 
-<div class="container mt-3">
+
+</div>
+
+<div class="layui-body">
 <section class="content">
   <header>
 
@@ -78,7 +97,7 @@
     var navHref = $(this).attr("href").split("\/");
 
     if(currentUrls[3]==navHref[1]){
-      $(this).addClass("active");
+      $(this).addClass("layui-this");
     }
   });
 </script>
