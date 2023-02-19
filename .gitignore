@@ -5,3 +5,6 @@
 .idea/misc.xml
 .idea/modules.xml
 .idea/sqldialects.xml
+build/*
+transport.egg-info/*
+dist/*
