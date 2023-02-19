@@ -1,26 +1,55 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}创建商品{% endblock %}</h1>
 
 {% endblock %}
 
 {% block content %}
-  <form id="productForm" method="post">
-    <label for="name">商品名称</label>
-    <input name="name" id="name" value="{{ request.form['name'] }}" required>
-    <label>单位</label>
-    <label for="bag">袋</label>
-    <input type="radio" name="unit" id="bag" value="bag"/>
-    <label for="kg">公斤</label>
-    <input type="radio" name="unit" id="kg" value="kg"/>
-    <label for="price">单价</label>
-    <input name="price" id="price" value="{{ request.form['price'] }}">
-    <label for="specification">规格</label>
-    <input name="specification" id="specification" value="{{ request.form['specification'] }}">
-    <input type="button" id="addMaterial" value="添加原材料">
-    <input type="submit" value="保存" class="submit">
+<div class="layui-container">
+<div class="layui-row">
+<div class="layui-col-md9 site-content">
+  <form id="productForm" method="post" class="layui-form layui-form-pane">
+      <div class="layui-form-item">
+        <label for="name" class="layui-form-label">商品名称</label>
+        <div class="layui-input-block">
+          <input name="name" class="layui-input" id="name" value="{{ request.form['name'] }}" required lay-verify="required">
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <label class="layui-form-label">单位</label>
+        <div class="layui-input-block">
+          <input type="radio" name="unit" id="bag" value="袋" title="袋" checked/>
+          <input type="radio" name="unit" id="kg" value="kg" title="kg"/>
+        </div>
+      </div>
+<!--      <div class="layui-col-md9">-->
+<!--    <label for="bag" class="layui-form-label">袋</label>-->
+<!--    <input type="radio" class="layui-form-radio" name="unit" id="bag" value="bag"/>-->
+<!--    <label for="kg" class="layui-form-label">公斤</label>-->
+<!--    <input type="radio" class="layui-form-radio" name="unit" id="kg" value="kg"/>-->
+<!--      </div>-->
+      <div class="layui-form-item">
+        <label for="price" class="layui-form-label">单价</label>
+        <div class="layui-input-block">
+         <input name="price" class="layui-input" id="price" value="{{ request.form['price'] }}">
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <label for="specification" class="layui-form-label">规格</label>
+        <div class="layui-input-block">
+          <input name="specification" class="layui-input" id="specification" value="{{ request.form['specification'] }}">
+        </div>
+      </div>
+    <div class="layui-form-item">
+    <input type="button" id="addMaterial" class="layui-btn layui-btn-normal" value="添加原材料">
+    <input type="submit" value="保存" class="layui-btn" >
+    </div>
   </form>
+</div>
+</div>
+</div>
 
 <script type="text/javascript">
     $(document).ready(function (){
@@ -31,7 +60,10 @@
           async:true,
           dataType:"json",
           success:function (data){
-            var selectionStr = "<select name=material>"
+            var selectionStr = "<div class=\"layui-form-item\">\n" +
+                    "    <label class=\"layui-form-label\">原材料</label>\n" +
+                    "    <div class=\"layui-input-block\">" +
+                    "<select name=material lay-verify='required'>"
             if(data&&data.length>0){
               for(var i=0;i<data.length;i++){
                 var option="<option value="+data[i].id +">" +data[i].name+",剩余库存"+data[i].count+"</option>";
@@ -39,10 +71,14 @@
               }
             }
             selectionStr+="</select>"
-            var inputStr = "<input placeholder='请填写原材料消耗' name=materialCost required>"
-            $("#addMaterial").before(selectionStr+inputStr)
+            var inputStr = "<input placeholder='请填写原材料消耗' class='layui-input' name=materialCost required></div></div>"
+            // var inputStr = "</div></div>"
+            $("#addMaterial").before(selectionStr+inputStr);
+            var form = layui.form;
+            form.render();
           }
-        })
+        });
+
       });
     });
     // $('.submit').click(function (){

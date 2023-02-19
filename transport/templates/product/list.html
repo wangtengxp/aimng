@@ -1,29 +1,23 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}商品列表{% endblock %}</h1>
 
 {% endblock %}
 
 {% block content %}
 
 <div class="page-body">
+  <div class="layui-col-md9 site-content">
   {% if g.user %}
-  <div class="container-xl">
-    <div class="col-6">
-      <div class="row g-2 align-items-center mb-n3">
-  <div class="col-3 col-sm-3 col-md-3 col-xl mb-3">
-    <a class="btn btn-primary w-100" href="{{ url_for('product.create') }}">创建商品信息</a>
-    </div>
-    <div class="col-3 col-sm-3 col-md-3 col-xl mb-3">
-    <a class="btn btn-primary w-100" href="{{ url_for('product.manufacture') }}">生产商品</a>
-    </div>
-      </div>
-      </div>
 
-  </div>
+    <div class="layui-btn-group">
+    <a class="layui-btn layui-btn-normal" href="{{ url_for('product.create') }}">创建商品信息</a>
+
+
+    <a class="layui-btn layui-btn-normal" href="{{ url_for('product.manufacture') }}">生产商品</a>
+      </div>
   {% endif %}
-    <table class="table table-bordered">
+    <table class="layui-table" lay-even>
       <thead>
         <tr>
           <th>商品名称</th>
@@ -50,33 +44,43 @@
           <td>{{product['specification']}}</td>
           <td>{{product['creator']}}</td>
           <td>{{product['material_cost_conf']}}</td>
-          <td><input type="button" onclick="deleteProduct({{product['id']}})" value="删除" id="{{product['id']}}" /></td>
+          <td><input type="button" class="layui-btn layui-btn-normal" onclick="deleteProduct({{product['id']}})" value="删除" id="{{product['id']}}" /></td>
         </tr>
       {% endfor %}
       </tbody>
     </table>
 </div>
+  </div>
 
 <script type="text/javascript">
   function deleteProduct(id){
-    $.confirm({
-      title:'是否确认删除',
-      content:'确认删除吗',
-      buttons:{
-        确认:function (){
-          $.post("/product/delete", {
+    layer.confirm('是否确认删除？',{btn:['确认','取消']},function(){
+      $.post("/product/delete", {
             "id" : id,
           }, function(data) {
             //成功，跳转到指定页面
            }, 'json'
           );
           location.reload();
-        },
-        取消:function () {
-          
-        }
-      }
     });
+    // layer.confirm({
+    //   title:'是否确认删除',
+    //   content:'确认删除吗',
+    //   buttons:{
+    //     确认:function (){
+    //       $.post("/product/delete", {
+    //         "id" : id,
+    //       }, function(data) {
+    //         //成功，跳转到指定页面
+    //        }, 'json'
+    //       );
+    //       location.reload();
+    //     },
+    //     取消:function () {
+    //
+    //     }
+    //   }
+    // });
   }
 
 </script>

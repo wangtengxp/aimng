@@ -1,24 +1,30 @@
 {% extends 'base.html' %}
 
-{% block header %}
-  <h1>{% block title %}创建原材料{% endblock %}</h1>
 
-{% endblock %}
 
 {% block content %}
+<div class="layui-container">
+<div class="layui-row">
 <div class="layui-col-md9 site-content">
-  <form id="materialForm" class="layui-form" method="post">
+  <form id="materialForm" class="layui-form layui-form-pane" method="post">
     <div class="layui-form-item">
-    <label class="layui-form-label" for="name">原材料名称</label>
+      <label class="layui-form-label" for="name">原材料名称</label>
       <div class="layui-input-block">
-    <input type="text" class="layui-input" name="name" id="name" value="{{ request.form['name'] }}" required>
+        <input type="text" class="layui-input" placeholder="请输入原材料名称" name="name" id="name" value="{{ request.form['name'] }}" required>
       </div>
-    <label class="layui-form-label">原材料数量</label>
-    <input type="text" class="layui-input" name="count" id="count" value="{{ request.form['count'] }}" required>
-    <input type="submit" class="layui-btn" value="保存">
+      </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="count">原材料数量</label>
+      <div class="layui-input-block">
+        <input type="text" class="layui-input" placeholder="请输入原材料数量" name="count" id="count" value="{{ request.form['count'] }}" required>
+      </div>
     </div>
+    <input type="submit" class="layui-btn" value="保存">
 
   </form>
+</div>
+  </div>
 </div>
 
 

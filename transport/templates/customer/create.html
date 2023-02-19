@@ -6,20 +6,51 @@
 {% endblock %}
 
 {% block content %}
-  <form id="customerForm" method="post">
-    <label for="name">客户名称</label>
-    <input name="name" id="name" value="{{ request.form['name'] }}" required>
-    <label>客户手机</label>
-    <input name="cellphone" id="cellphone" value="{{ request.form['cellphone'] }}" required>
-    <label>省份</label>
-    <input name="province" id="province" value="{{ request.form['province'] }}" required>
-    <label>城市</label>
-    <input name="city" id="city" value="{{ request.form['city'] }}" required>
-    <label>详细地址</label>
-    <input name="address" id="address" value="{{ request.form['address'] }}" required>
-    <input type="submit" value="保存">
+<div class="layui-container">
+<div class="layui-row">
+<div class="layui-col-md9 site-content">
+  <form id="customerForm" method="post" class="layui-form layui-form-pane">
+    <div class="layui-form-item">
+    <label class="layui-form-label" for="name">客户名称</label>
+      <div class="layui-input-block">
+        <input name="name" class="layui-input" id="name" value="{{ request.form['name'] }}" required>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">客户手机</label>
+      <div class="layui-input-block">
+        <input class="layui-input" name="cellphone" id="cellphone" value="{{ request.form['cellphone'] }}" required>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">省份</label>
+      <div class="layui-input-block">
+        <input name="province" class="layui-input" id="province" value="{{ request.form['province'] }}" required>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+    <label class="layui-form-label">城市</label>
+      <div class="layui-input-block">
+        <input name="city" class="layui-input" id="city" value="{{ request.form['city'] }}" required>
+      </div>
+    </div>
+
+      <div class="layui-form-item">
+    <label class="layui-form-label">详细地址</label>
+        <div class="layui-input-block">
+    <input name="address" class="layui-input" id="address" value="{{ request.form['address'] }}" required>
+        </div>
+      </div>
+
+    <input type="submit" class="layui-btn" value="保存">
 
   </form>
+</div>
+</div>
+</div>
 
 
 

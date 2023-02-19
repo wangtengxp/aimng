@@ -55,5 +55,12 @@ def create():
             db.commit()
             return redirect(url_for('carriage.index'))
     db = get_db()
-    sellRecords = db.execute('select id from sell_record order by id desc').fetchall()
+    # sellRecords = db.execute('select id from sell_record order by id desc').fetchall()
+
+    sellRecords = db.execute(
+        'SELECT sr.id, sr.create_time, sr.amount,pd.name as product_name,sl.name as seller_name,cst.name as customer_name,sr.transported_amount as transported_amount'
+        ' FROM sell_record sr left join product_def pd on sr.product_id=pd.id left join seller sl on sr.seller_id= sl.id left join customer cst on sr.customer_id=cst.id'
+        ' ORDER BY sr.id DESC'
+    ).fetchall()
+
     return render_template('carriage/create.html',sellRecords=sellRecords)

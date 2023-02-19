@@ -29,7 +29,7 @@ def material():
     ).fetchall()
     rows=[]
     for(id,name,count) in materials:
-        row={"id":int(id),"name":name,"count":int(count)}
+        row={"id":int(id),"name":name,"count":float(count)}
         rows.append(row)
     return json.dumps(rows)
 

@@ -12,13 +12,13 @@
   <div class="container-xl">
       <div class="row g-2 align-items-center mb-n3">
   <div class="col-6 col-sm-3 col-md-2 col-xl mb-3">
-    <a class="btn btn-primary w-100" href="{{ url_for('sell_record.create') }}">新建销售订单</a>
+    <a class="layui-btn layui-btn-normal" href="{{ url_for('sell_record.create') }}">新建销售订单</a>
   </div>
         </div>
       </div>
   {% endif %}
 
-    <table class="table table-bordered">
+    <table class="layui-table" lay-even>
       <thead>
         <tr>
           <th>销售订单号</th>
@@ -45,7 +45,7 @@
           {% else %}
           <td>{{sellRecord['transported_amount']}}</td>
           {% endif %}
-          <td><input type="button" onclick="deleteSellRecord({{sellRecord['id']}})" value="删除" id="{{sellRecord['id']}}" /></td>
+          <td><input type="button" class="layui-btn layui-btn-normal" onclick="deleteSellRecord({{sellRecord['id']}})" value="删除" id="{{sellRecord['id']}}" /></td>
         </tr>
       {% endfor %}
       </tbody>
@@ -53,24 +53,16 @@
 </div>
 
 <script type="text/javascript">
+
   function deleteSellRecord(id){
-    $.confirm({
-      title:'是否确认删除',
-      content:'确认删除吗',
-      buttons:{
-        确认:function (){
-          $.post("/sell_record/delete", {
+    layer.confirm('是否确认删除？',{btn:['确认','取消']},function(){
+      $.post("/sell_record/delete", {
             "id" : id,
           }, function(data) {
             //成功，跳转到指定页面
            }, 'json'
           );
           location.reload();
-        },
-        取消:function () {
-
-        }
-      }
     });
   }
 

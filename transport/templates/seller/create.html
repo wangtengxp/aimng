@@ -6,14 +6,30 @@
 {% endblock %}
 
 {% block content %}
-  <form id="sellerForm" method="post">
-    <label for="name">销售员名称</label>
-    <input name="name" id="name" value="{{ request.form['name'] }}" required>
-    <label>销售员手机</label>
-    <input name="cellphone" id="cellphone" value="{{ request.form['cellphone'] }}" required>
-    <input type="submit" value="保存">
+<div class="layui-container">
+<div class="layui-row">
+<div class="layui-col-md9 site-content">
+  <form id="sellerForm" method="post" class="layui-form layui-form-pane">
+    <div class="layui-form-item">
+    <label for="name" class="layui-form-label">销售员名称</label>
+      <div class="layui-input-block">
+         <input name="name" class="layui-input" id="name" value="{{ request.form['name'] }}" required>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+    <label class="layui-form-label">销售员手机</label>
+      <div class="layui-input-block">
+        <input name="cellphone" class="layui-input" id="cellphone" value="{{ request.form['cellphone'] }}" required>
+      </div>
+    </div>
+
+    <input type="submit" class="layui-btn" value="保存">
 
   </form>
+</div>
+</div>
+</div>
 
 
 

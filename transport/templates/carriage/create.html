@@ -6,21 +6,43 @@
 {% endblock %}
 
 {% block content %}
-  <form id="sellRecordForm" method="post">
-    <select name="sell_record_id">
-      <option>请选择销售订单号</option>
+<div class="layui-container">
+<div class="layui-row">
+<div class="layui-col-md9 site-content">
+  <form id="sellRecordForm" method="post" class="layui-form">
+    <div class="layui-form-item">
+    <select name="sell_record_id" lay-verify="required">
+      <option value="">请选择销售订单号</option>
       {% for sellRecord in sellRecords %}
-      <option value="{{sellRecord['id']}}">{{sellRecord["id"]}}</option>
+      <option value="{{sellRecord['id']}}">订单号:{{sellRecord["id"]}},商品名称:{{sellRecord['product_name']}},客户名称:{{sellRecord['customer_name']}},已发货:{{sellRecord['transported_amount']}}</option>
       {% endfor %}
     </select>
-    <input name="amount" id="amount" placeholder="请输入发货数量" required>
-    <input name="address" id="address" placeholder="目的地" required>
-    <input name="driver_name" id="driver_name" placeholder="司机姓名" required>
-    <input name="driver_cellphone" id="driver_cellphone" placeholder="司机手机号" required>
+    </div>
 
-    <input type="submit" value="确定">
+    <div class="layui-form-item">
+    <input name="amount" class="layui-input" id="amount" placeholder="请输入发货数量" required>
+    </div>
+
+    <div class="layui-form-item">
+    <input name="address" class="layui-input" id="address" placeholder="目的地" required>
+    </div>
+
+
+    <div class="layui-form-item">
+    <input name="driver_name" class="layui-input" id="driver_name" placeholder="司机姓名" required>
+    </div>
+
+
+    <div class="layui-form-item">
+    <input name="driver_cellphone" class="layui-input" id="driver_cellphone" placeholder="司机手机号" required>
+    </div>
+
+    <input type="submit" class="layui-btn" value="确定">
 
   </form>
+</div>
+</div>
+</div>
 
 
 {% endblock %}

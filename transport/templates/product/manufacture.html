@@ -6,17 +6,34 @@
 {% endblock %}
 
 {% block content %}
-  <form id="productForm" method="post">
-    <select name="product">
-      <option>请选择要生产的商品</option>
-      {% for product in products %}
-      <option value="{{product['id']}}">{{product["name"]}}</option>
-      {% endfor %}
-    </select>
-    <input name="amount" id="amount" placeholder="请输入生产数量" required>
-    <input type="submit" value="确定">
+<div class="layui-container">
+<div class="layui-row">
+<div class="layui-col-md9 site-content">
+  <form id="productForm" class="layui-form layui-form-pane" method="post">
+    <div class="layui-form-item">
+      <label class="layui-form-label">选择商品</label>
+      <div class="layui-input-block">
+        <select name="product">
+          <option>请选择要生产的商品</option>
+          {% for product in products %}
+          <option value="{{product['id']}}">{{product["name"]}}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">生产数量</label>
+      <div class="layui-input-block">
+        <input name="amount" class="layui-input" id="amount" placeholder="请输入生产数量" required>
+      </div>
+    </div>
+    <input type="submit" value="确定" class="layui-btn">
 
   </form>
+</div>
+</div>
+</div>
+
 
 
 {% endblock %}

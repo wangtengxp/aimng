@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}客户列表{% endblock %}</h1>
 
 {% endblock %}
 
@@ -11,12 +10,12 @@
   {% if g.user %}
   <div class="container-xl">
   <div class="col-6 col-sm-4 col-md-2 col-xl mb-3">
-    <a class="btn btn-primary w-100" href="{{ url_for('customer.create') }}">新建客户</a>
+    <a class="layui-btn layui-btn-normal" href="{{ url_for('customer.create') }}">新建客户</a>
   </div>
   </div>
   {% endif %}
 
-    <table class="table table-bordered">
+    <table class="layui-table" lay-even>
       <thead>
         <tr>
           <th>客户名称</th>
