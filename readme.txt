@@ -9,7 +9,7 @@ flask --app transport --debug run
 flask --app transport run
 
 生产环境启动
-python main.py
+waitress-serve --port=5000 --call  'transport:create_app'
 
 生产环境部署
 https://blog.csdn.net/shanmu0737/article/details/123741409
