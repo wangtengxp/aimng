@@ -7,8 +7,10 @@ from .auth import login_required
 from .db import get_db
 import json
 import os
+import uuid
 
-UPLOAD_FOLDER = 'D:/github/aimng/transport/path/uploads'
+UPLOAD_FOLDER_RELATIVE='/transport/path/uploads/'
+UPLOAD_FOLDER = 'D:/github/aimng'+UPLOAD_FOLDER_RELATIVE
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 bp = Blueprint('carriage', __name__,url_prefix='/carriage')
@@ -42,15 +44,14 @@ def uploadDriverLicense():
             flash('文件不存在')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            filename = uuid.uuid1().__str__()+'.'+file.filename.split('.')[1]
             file.save(os.path.join(UPLOAD_FOLDER, filename))
 
             return {
               "code": 0
               ,"msg": ""
               ,"data": {
-                "src": url_for('carriage.uploaded_file',
-                    filename=filename)
+                "src": UPLOAD_FOLDER_RELATIVE+filename
               }
             }
     return {
@@ -91,6 +92,7 @@ def create():
                 (sell_record_id, amount, address,driver_name,driver_cellphone)
             )
             #更新销售订单已发货数量
+            sellRecordRow = db.execute('SELECT transported_amount,amount from sell_record where id= ?',(sell_record_id,)).fetchone()
             transportedAmount = float(sellRecordRow['transported_amount'])
             newTransportedAmount =transportedAmount+float(amount)
             sellAmount=float(sellRecordRow['amount'])

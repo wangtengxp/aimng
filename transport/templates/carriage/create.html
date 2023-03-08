@@ -95,7 +95,9 @@ layui.use(['upload', 'element', 'layer'], function() {
       //上传成功的一些操作
       //……
       $('#demoText').html(''); //置空上传失败的状态
-      $('#driver_liscense').setAttribute('value',res.data.src);
+      $('#driver_liscense').attr('value',res.data.src);
+<!--      var form = layui.form;-->
+<!--      form.render();-->
     }
     , error: function () {
       //演示失败状态，并实现重传
