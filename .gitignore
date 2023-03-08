@@ -8,3 +8,4 @@
 build/*
 transport.egg-info/*
 dist/*
+transport/static/uploads/*

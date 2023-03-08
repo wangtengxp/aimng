@@ -9,8 +9,8 @@ import json
 import os
 import uuid
 
-UPLOAD_FOLDER_RELATIVE='/transport/path/uploads/'
-UPLOAD_FOLDER = 'D:/github/aimng'+UPLOAD_FOLDER_RELATIVE
+UPLOAD_FOLDER_RELATIVE='/static/uploads/driver_liscense/'
+UPLOAD_FOLDER = 'D:/github/aimng/transport'+UPLOAD_FOLDER_RELATIVE
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 bp = Blueprint('carriage', __name__,url_prefix='/carriage')
@@ -19,7 +19,7 @@ bp = Blueprint('carriage', __name__,url_prefix='/carriage')
 def index():
     db = get_db()
     transports = db.execute(
-        'SELECT id,sell_record_id, amount, address,driver_name,driver_cellphone'
+        'SELECT id,sell_record_id, amount, address,driver_name,driver_cellphone,driver_liscense'
         ' FROM transport'
         ' ORDER BY id DESC'
     ).fetchall()
@@ -76,6 +76,7 @@ def create():
         address = request.form['address']
         driver_name = request.form['driver_name']
         driver_cellphone = request.form['driver_cellphone']
+        driver_liscense = request.form['driver_liscense']
 
         error = None
 
@@ -87,9 +88,9 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO transport (sell_record_id, amount, address,driver_name,driver_cellphone)'
-                ' VALUES (?, ?, ?, ?, ?)',
-                (sell_record_id, amount, address,driver_name,driver_cellphone)
+                'INSERT INTO transport (sell_record_id, amount, address,driver_name,driver_cellphone,driver_liscense)'
+                ' VALUES (?, ?, ?, ?, ?,?)',
+                (sell_record_id, amount, address,driver_name,driver_cellphone,driver_liscense)
             )
             #更新销售订单已发货数量
             sellRecordRow = db.execute('SELECT transported_amount,amount from sell_record where id= ?',(sell_record_id,)).fetchone()

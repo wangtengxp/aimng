@@ -30,6 +30,7 @@
           <th>目的地</th>
           <th>司机姓名</th>
           <th>司机电话</th>
+          <th>驾照</th>
         </tr>
       </thead>
       <tbody>
@@ -41,10 +42,21 @@
           <td>{{transport['address']}}</td>
           <td>{{transport['driver_name']}}</td>
           <td>{{transport['driver_cellphone']}}</td>
+          <td><img src="../..{{transport['driver_liscense']}}" onclick="showLiscense(this)"></td>
         </tr>
       {% endfor %}
       </tbody>
     </table>
   </div>
 </div>
+<script type="text/javascript">
+  function showLiscense(e){
+    layer.open({type:1,
+    title:false,
+    closeBtn:0,
+    shadeClose:true,
+    area:[$(e).width+'px',$(e).height+'px'],
+    content:"<img src="+$(e).attr('src')+" />"})
+  }
+</script>
 {% endblock %}
