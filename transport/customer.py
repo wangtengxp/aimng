@@ -1,11 +1,9 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
-from werkzeug.exceptions import abort
 
 from .auth import login_required
 from .db import get_db
-import json
 
 bp = Blueprint('customer', __name__,url_prefix='/customer')
 
@@ -13,9 +11,9 @@ bp = Blueprint('customer', __name__,url_prefix='/customer')
 def index():
     db = get_db()
     customers = db.execute(
-        'SELECT id, name, cellphone,city,province,address'
+        'SELECT id, name, cellphone,city,province,address,salesman,contacts,receivable'
         ' FROM customer'
-        ' ORDER BY id DESC'
+        ' ORDER BY id'
     ).fetchall()
     return render_template('customer/list.html', customers=customers)
 

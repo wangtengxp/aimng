@@ -17,6 +17,10 @@
         <tr>
           <th>原材料名称</th>
           <th>原材料数量</th>
+          <th>类型</th>
+          <th>单位</th>
+          <th>备注</th>
+          <th>标记</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -25,8 +29,47 @@
         <tr>
           <td>{{material['name']}}</td>
           <td>{{material['count']}}</td>
+          <td>
+            {% if material['type']=='ZHONG_YI_JI' %}
+              种衣剂
+            {% elif material['type']=='NEIMO' %}
+              内膜
+            {% elif material['type']=='OUTER_PACK' %}
+              外包装
+            {% elif material['type']=='CHENGPIN' %}
+              成品
+            {% elif material['type']=='BAOYI_SANZI' %}
+              包衣散籽
+            {% elif material['type']=='SANZI' %}
+              包衣散籽
+            {% else %}
+              {{material['type']}}
+            {% endif %}
+          </td>
+          <td>
+            {% if material['unit']=='kg' %}
+              公斤
+            {% elif material['unit']=='piece' %}
+              条
+            {% elif material['unit']=='bag' %}
+              袋
+            {% endif %}
+          </td>
+          <td>
+            {% if material['comment']==None %}
 
-          <td><button class="layui-btn" onclick="modifyLayer('{{material['id']}}','{{material['name']}}')">修改</button></td>
+            {% else %}
+              {{material['comment']}}
+            {% endif %}
+          </td>
+          <td>
+             {% if material['tag']==None %}
+
+            {% else %}
+              {{material['tag']}}
+            {% endif %}
+          </td>
+          <td><button class="layui-btn" onclick="modifyLayer('{{material['id']}}','{{material['name']}}')">修改数量</button></td>
         </tr>
       {% endfor %}
       </tbody>
@@ -80,7 +123,7 @@
   // });
 
   function modifyLayer(id,name) {
-    layer.prompt({title: '修改原材料:'+name}, function(amount, index){
+    layer.prompt({title: '修改原材料数量:'+name}, function(amount, index){
       layer.close(index);
       var data={'id':id,'amount':amount}
       $.ajax({

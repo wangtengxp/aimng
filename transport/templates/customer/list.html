@@ -19,20 +19,26 @@
       <thead>
         <tr>
           <th>客户名称</th>
-          <th>手机</th>
-          <th>省份</th>
           <th>城市</th>
+          <th>业务员</th>
+          <th>联系人</th>
+           <th>手机</th>
+          <th>应收合计</th>
+          <th>省份</th>
           <th>详细地址</th>
-
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
       {% for customer in customers %}
         <tr>
           <td>{{customer['name']}}</td>
-          <td>{{customer['cellphone']}}</td>
-          <td>{{customer['province']}}</td>
           <td>{{customer['city']}}</td>
+          <td>{{customer['salesman']}}</td>
+          <td>{{customer['contacts']}}</td>
+          <td>{{customer['cellphone']}}</td>
+          <td>{{customer['receivable']}}</td>
+          <td>{{customer['province']}}</td>
           <td>{{customer['address']}}</td>
         </tr>
       {% endfor %}

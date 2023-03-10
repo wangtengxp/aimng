@@ -13,7 +13,7 @@ bp = Blueprint('material', __name__,url_prefix='/material')
 def index():
     db = get_db()
     materials = db.execute(
-        'SELECT id, name, count'
+        'SELECT id, name, count,comment,type,unit,tag'
         ' FROM material'
         ' ORDER BY id DESC'
     ).fetchall()
