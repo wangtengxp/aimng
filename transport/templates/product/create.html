@@ -9,6 +9,8 @@
 <div class="layui-row">
 <div class="layui-col-md9 site-content">
   <form id="productForm" method="post" class="layui-form layui-form-pane">
+
+      <input name="id" value="{{product['id'] or 0}}" hidden >
       <div class="layui-form-item">
         <label for="name" class="layui-form-label">商品名称</label>
         <div class="layui-input-block">
@@ -19,8 +21,8 @@
       <div class="layui-form-item">
         <label class="layui-form-label">单位</label>
         <div class="layui-input-block">
-          <input type="radio" name="unit" id="bag" value="袋" title="袋" checked/>
-          <input type="radio" name="unit" id="kg" value="kg" title="kg"/>
+          <input type="radio" name="unit" id="bag" value="bag" title="袋" {{'checked' if product['unit']=='bag'}}/>
+          <input type="radio" name="unit" id="kg" value="kg" title="kg" {{'checked' if product['unit']=='kg'}} />
         </div>
       </div>
 <!--      <div class="layui-col-md9">-->

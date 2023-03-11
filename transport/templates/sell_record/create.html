@@ -11,7 +11,7 @@
 <div class="layui-col-md9 site-content">
   <form id="sellRecordForm" method="post" class="layui-form">
     <div class="layui-form-item">
-        <select name="product_id" lay-verify="required">
+        <select name="product_id" lay-verify="required" lay-search>
           <option value="">请选择销售的商品</option>
           {% for product in sellCreateInfos.products %}
           <option value="{{product['id']}}">{{product["name"]}}</option>

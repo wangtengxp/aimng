@@ -13,7 +13,7 @@ bp = Blueprint('product', __name__,url_prefix='/product')
 def index():
     db = get_db()
     products = db.execute(
-        'SELECT id, name, unit, specification, price,creator,material_cost_conf,comment'
+        'SELECT id, name, unit, specification, price,creator,material_cost_conf,comment,inventory'
         ' FROM product_def'
         ' ORDER BY id DESC'
     ).fetchall()
@@ -55,6 +55,51 @@ def create():
         name = request.form['name']
         unit = request.form['unit']
         price = request.form['price']
+        comment = request.form['comment']
+        specification = request.form['specification']
+        formDict = dict(request.form.lists())
+        material =formDict.get('material')
+        materialCost = formDict.get('materialCost')
+        
+
+        error = None
+
+        if not name:
+            error = '请填写商品名称.'
+        if not unit:
+            error = '请填写单位'
+        if not material:
+            error = '没有获取到material'
+
+        if error is not None:
+            flash(error)
+        else:
+            materialCostArray = list()
+            for i in range(len(material)):
+                costDict=dict()
+                costDict['materialId']=int(material[i])
+                costDict['materialCost']=materialCost[i]
+                materialCostArray.append(costDict)
+            materialCostJson=json.dumps(materialCostArray)
+            db = get_db()
+            db.execute(
+                'INSERT INTO product_def (name, unit, specification,price,creator,material_cost_conf,comment)'
+                ' VALUES (?, ?, ?, ?, ?,?,?)',
+                (name, unit, specification,price, g.user['username'],materialCostJson,comment)
+            )
+            db.commit()
+            return redirect(url_for('product.index'))
+
+    return render_template('product/create.html',product={})
+@bp.route('/<int:id>/modify', methods=('GET', 'POST'))
+@login_required
+def modify(id):
+    if request.method == 'POST':
+        id= request.form['id']
+        name = request.form['name']
+        unit = request.form['unit']
+        price = request.form['price']
+        comment = request.form['comment']
         specification = request.form['specification']
         formDict = dict(request.form.lists())
         material =formDict.get('material')
@@ -81,17 +126,13 @@ def create():
             materialCostJson=json.dumps(materialCostArray)
             db = get_db()
             db.execute(
-                'INSERT INTO product_def (name, unit, specification,price,creator,material_cost_conf)'
-                ' VALUES (?, ?, ?, ?, ?,?)',
-                (name, unit, specification,price, g.user['username'],materialCostJson)
+                'update product_def set name=?, unit=?, specification=?,price=?,material_cost_conf=?,comment=? '
+                'where id = ?',
+                (name, unit, specification,price,materialCostJson,comment,id)
             )
             db.commit()
             return redirect(url_for('product.index'))
 
-    return render_template('product/create.html',product={})
-@bp.route('/<int:id>/modify', methods=('GET', 'POST'))
-@login_required
-def modify(id):
     db = get_db()
     product = db.execute(
         'SELECT id, name, unit, specification, price,creator,material_cost_conf,comment'
@@ -144,16 +185,11 @@ def manufacture():
                     flash("原材料'"+str(materialAmount['name'])+"'不足")
                     return redirect(url_for('product.index'))
                 db.execute('UPDATE material set count=? where id=?',(materialLeft,materialId))
-            inventory = db.execute('select * from product_inventory where product_id=?',(productId,)).fetchone()
+            product = db.execute('select * from product_def where id=?',(productId,)).fetchone()
 
-            if inventory is None:
-                db.execute('INSERT INTO product_inventory (product_id, amount)'
-                ' VALUES (?, ?)',
-                (productId, amount))
 
-            else:
-                newAmount = amount+inventory['amount']
-                db.execute('UPDATE product_inventory set amount=? where id=?',(newAmount,inventory['id']))
+            newInventory = amount+product['inventory']
+            db.execute('UPDATE product_def set inventory=? where id=?',(newInventory,productId))
             db.commit()
             return redirect(url_for('product.index'))
     db = get_db()
