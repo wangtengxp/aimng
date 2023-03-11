@@ -24,8 +24,8 @@
           <th>联系人</th>
            <th>手机</th>
           <th>应收合计</th>
-          <th>省份</th>
-          <th>详细地址</th>
+<!--          <th>省份</th>-->
+<!--          <th>详细地址</th>-->
           <th>操作</th>
         </tr>
       </thead>
@@ -38,13 +38,32 @@
           <td>{{customer['contacts']}}</td>
           <td>{{customer['cellphone']}}</td>
           <td>{{customer['receivable']}}</td>
-          <td>{{customer['province']}}</td>
-          <td>{{customer['address']}}</td>
+<!--          <td>{{customer['province']}}</td>-->
+<!--          <td>{{customer['address']}}</td>-->
+          <td><button class="layui-btn" onclick="receiveMoney('{{customer['id']}}','{{customer['name']}}')">收款</button></td>
         </tr>
       {% endfor %}
       </tbody>
     </table>
 
 </div>
+<script type="text/javascript">
+  function receiveMoney(id,name) {
+    layer.prompt({title: '收到客户:'+name+'的付款(单位元)'}, function(money, index){
+      layer.close(index);
+      var data={'id':id,'money':money}
+      $.ajax({
+          type:"POST",
+          url:"/customer/receiveMoney",
+          data:data,
+          async:true,
+          dataType:"json",
+          success:function (data){
 
+          }
+        });
+      location.reload();
+    });
+  }
+</script>
 {% endblock %}

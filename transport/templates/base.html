@@ -55,7 +55,7 @@
         <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('inventory.index')}}">库存</a></li>
         {% endif %}
         {% if g.user['role']=='ADMIN' %}
-        <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('customer.index')}}">客户信息</a></li>
+        <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('customer.index')}}">客户往来账</a></li>
         <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('seller.index')}}">销售人员信息</a></li>
         <li class="layui-nav-item"><a class="nav-link" href="{{url_for('sell_record.index')}}">销售订单</a></li>
         <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('carriage.index')}}">发货单</a></li>

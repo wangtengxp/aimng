@@ -63,7 +63,8 @@
             var selectionStr = "<div class=\"layui-form-item\">\n" +
                     "    <label class=\"layui-form-label\">原材料</label>\n" +
                     "    <div class=\"layui-input-block\">" +
-                    "<select name=material lay-verify='required'>"
+                    "<select name=material lay-verify='required' lay-search>"+
+                    "<option value=''>请选择原材料</option>"
             if(data&&data.length>0){
               for(var i=0;i<data.length;i++){
                 var option="<option value="+data[i].id +">" +data[i].name+",剩余库存"+data[i].count+"</option>";

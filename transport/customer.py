@@ -46,3 +46,24 @@ def create():
             return redirect(url_for('customer.index'))
 
     return render_template('customer/create.html')
+
+@bp.route('/receiveMoney', methods=('GET', 'POST'))
+@login_required
+def receiveMoney():
+    if request.method == 'POST':
+        id = request.form['id']
+        money = float(request.form['money'])
+
+        error = None
+        if not money:
+            error = '请填写金额'
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            customerRow = db.execute('SELECT receivable from customer where id= ?', (id,)).fetchone()
+            receivable = float(customerRow['receivable'])
+            db.execute('UPDATE customer set receivable=? where id=?', (receivable-money, id))
+            db.commit()
+    return redirect(url_for('customer.index'))
