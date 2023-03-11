@@ -12,7 +12,7 @@
       <div class="layui-form-item">
         <label for="name" class="layui-form-label">商品名称</label>
         <div class="layui-input-block">
-          <input name="name" class="layui-input" id="name" value="{{ request.form['name'] }}" required lay-verify="required">
+          <input name="name" class="layui-input" id="name" value="{{ product['name'] or '' }}" required lay-verify="required">
         </div>
       </div>
 
@@ -32,16 +32,44 @@
       <div class="layui-form-item">
         <label for="price" class="layui-form-label">建议单价</label>
         <div class="layui-input-block">
-         <input name="price" class="layui-input" id="price" value="{{ request.form['price'] }}">
+         <input name="price" class="layui-input" id="price" value="{{ product['price'] or '0' }}">
         </div>
       </div>
 
       <div class="layui-form-item">
         <label for="specification" class="layui-form-label">规格</label>
         <div class="layui-input-block">
-          <input name="specification" class="layui-input" id="specification" value="{{ request.form['specification'] }}">
+          <input name="specification" class="layui-input" id="specification" value="{{ product['specification'] or '' }}">
         </div>
       </div>
+
+      <div class="layui-form-item">
+        <label for="comment" class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+          <input name="comment" class="layui-input" id="comment" value="{{ product['comment'] or '' }}">
+        </div>
+      </div>
+      {% if product['material_cost_conf'] %}
+        {% for materialCost in product['material_cost_conf'] %}
+          <div class="layui-form-item">
+            <label class="layui-form-label">原材料</label>
+            <div class="layui-input-block">
+<!--                <input name="material" class="layui-input" value="{{ materialCost or '' }}">-->
+                <select name=material lay-verify='required' lay-search>
+                    <option value=''>请选择原材料</option>
+                    {% for material in materials%}
+                        {% if material.id==materialCost.materialId %}
+                            <option value="{{material.id}}" selected>{{material.name}}</option>
+                        {%else%}
+                            <option value="{{material.id}}">{{material.name}}</option>
+                        {%endif%}
+                    {% endfor %}
+                </select>
+                <input placeholder='请填写原材料消耗' class='layui-input' name=materialCost required value="{{materialCost.materialCost}}">
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
     <div class="layui-form-item">
     <input type="button" id="addMaterial" class="layui-btn layui-btn-normal" value="添加原材料">
     <input type="submit" value="保存" class="layui-btn" >

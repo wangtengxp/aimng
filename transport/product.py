@@ -75,7 +75,7 @@ def create():
             materialCostArray = list()
             for i in range(len(material)):
                 costDict=dict()
-                costDict['materialId']=material[i]
+                costDict['materialId']=int(material[i])
                 costDict['materialCost']=materialCost[i]
                 materialCostArray.append(costDict)
             materialCostJson=json.dumps(materialCostArray)
@@ -88,7 +88,7 @@ def create():
             db.commit()
             return redirect(url_for('product.index'))
 
-    return render_template('product/create.html')
+    return render_template('product/create.html',product={})
 @bp.route('/<int:id>/modify', methods=('GET', 'POST'))
 @login_required
 def modify(id):
@@ -97,7 +97,18 @@ def modify(id):
         'SELECT id, name, unit, specification, price,creator,material_cost_conf,comment'
         ' FROM product_def where id =?',(id,)
     ).fetchone()
-    return render_template('product/create.html',product=product)
+
+    materials = db.execute(
+        'SELECT id, name, count'
+        ' FROM material'
+        ' ORDER BY id DESC'
+    ).fetchall()
+    productDict = dict(product)
+    materialCostConfStr = product['material_cost_conf']
+    if materialCostConfStr is not None:
+        materialCostConf = json.loads(materialCostConfStr)
+        productDict['material_cost_conf'] = materialCostConf
+    return render_template('product/create.html',product=productDict,materials=materials)
 @bp.route('/manufacture', methods=('GET', 'POST'))
 @login_required
 def manufacture():

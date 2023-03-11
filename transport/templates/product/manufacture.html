@@ -13,8 +13,8 @@
     <div class="layui-form-item">
       <label class="layui-form-label">选择商品</label>
       <div class="layui-input-block">
-        <select name="product">
-          <option>请选择要生产的商品</option>
+        <select name="product" lay-search>
+          <option value="">请选择要生产的商品</option>
           {% for product in products %}
           <option value="{{product['id']}}">{{product["name"]}}</option>
           {% endfor %}
