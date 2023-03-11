@@ -13,7 +13,7 @@ bp = Blueprint('product', __name__,url_prefix='/product')
 def index():
     db = get_db()
     products = db.execute(
-        'SELECT id, name, unit, specification, price,creator,material_cost_conf'
+        'SELECT id, name, unit, specification, price,creator,material_cost_conf,comment'
         ' FROM product_def'
         ' ORDER BY id DESC'
     ).fetchall()
@@ -37,10 +37,11 @@ def index():
         productDict=dict(product)
 
         materialCostConfStr = product['material_cost_conf']
-        materialCostConf = json.loads(materialCostConfStr)
-        materialCostStr=""
-        for cost in materialCostConf:
-            materialCostStr+=materialMap.get(int(cost['materialId']))+":"+cost['materialCost']+";"
+        materialCostStr = ""
+        if materialCostConfStr is not None:
+            materialCostConf = json.loads(materialCostConfStr)
+            for cost in materialCostConf:
+                materialCostStr+=materialMap.get(int(cost['materialId']))+":"+cost['materialCost']+";"
         productDict['material_cost_conf']=materialCostStr
         productList.append(productDict)
 
@@ -88,7 +89,15 @@ def create():
             return redirect(url_for('product.index'))
 
     return render_template('product/create.html')
-
+@bp.route('/<int:id>/modify', methods=('GET', 'POST'))
+@login_required
+def modify(id):
+    db = get_db()
+    product = db.execute(
+        'SELECT id, name, unit, specification, price,creator,material_cost_conf,comment'
+        ' FROM product_def where id =?',(id,)
+    ).fetchone()
+    return render_template('product/create.html',product=product)
 @bp.route('/manufacture', methods=('GET', 'POST'))
 @login_required
 def manufacture():

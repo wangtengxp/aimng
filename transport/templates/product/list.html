@@ -26,6 +26,7 @@
           <th>规格</th>
           <th>创建人</th>
           <th>原材料消耗</th>
+          <th>备注</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -41,10 +42,22 @@
           <td>无</td>
           {% endif %}
           <td>{{product['price']}}</td>
-          <td>{{product['specification']}}</td>
+          <td>
+            {% if product['specification']==None %}
+
+            {% else %}
+              {{product['specification']}}
+            {% endif %}
+          </td>
           <td>{{product['creator']}}</td>
           <td>{{product['material_cost_conf']}}</td>
-          <td><input type="button" class="layui-btn layui-btn-normal" onclick="deleteProduct({{product['id']}})" value="删除" id="{{product['id']}}" /></td>
+          <td>{{product['comment']}}</td>
+          <td>
+            <div class="layui-table-cell laytable-cell-1-0-10">
+              <button type="button" class="layui-btn" onclick="deleteProduct({{product['id']}})" id="{{product['id']}}">删除</button>
+              <a href="{{ url_for('product.modify',id=product['id']) }}" class="layui-btn"  lay-event="edit">修改</a>
+            </div>
+          </td>
         </tr>
       {% endfor %}
       </tbody>

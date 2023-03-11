@@ -29,7 +29,7 @@
     </div>
 
     <div class="layui-form-item">
-      <select name="customer_id" lay-verify="required">
+      <select name="customer_id" lay-verify="required" lay-search>
       <option value="">请选择客户</option>
       {% for customer in sellCreateInfos.customers %}
       <option value="{{customer['id']}}">{{customer["name"]}}</option>
