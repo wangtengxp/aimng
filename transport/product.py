@@ -49,6 +49,18 @@ def index():
 
     return render_template('product/list.html', products=productList)
 
+@bp.route('/findById/<int:id>', methods=('GET', 'POST'))
+@login_required
+def findById(id):
+    db = get_db()
+    product = db.execute('SELECT * from product_def where id=?',(id,)).fetchone()
+    productDict = dict(product)
+    materialCostConfStr = product['material_cost_conf']
+    if materialCostConfStr is not None:
+        materialCostConf = json.loads(materialCostConfStr)
+        productDict['material_cost_conf'] = materialCostConf
+    return json.dumps(productDict)
+
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
@@ -158,6 +170,10 @@ def manufacture():
         productId = request.form['product']
         amount = float(request.form['amount'])
 
+        formDict = dict(request.form.lists())
+        material = formDict.get('material')
+        materialCostProd = formDict.get('materialCost')
+
         error = None
 
         if not productId:
@@ -169,25 +185,33 @@ def manufacture():
             flash(error)
         else:
             db = get_db()
+            materialCostArray = list()
+            for i in range(len(material)):
+                costDict = dict()
+                costDict['materialId'] = int(material[i])
+                costDict['materialCost'] = float(materialCostProd[i])
+                materialCostArray.append(costDict)
+            materialCostJson = json.dumps(materialCostArray)
+
             db.execute(
-                'INSERT INTO manufacture_record (product_id, amount,create_time)'
-                ' VALUES (?, ?,?)',
-                (productId, amount,time.strftime('%Y-%m-%d %H:%M:%S'))
+                'INSERT INTO manufacture_record (product_id, amount,create_time,material_cost)'
+                ' VALUES (?, ?,?,?)',
+                (productId, amount,time.strftime('%Y-%m-%d %H:%M:%S'),materialCostJson)
             )
 
-            materialCostRow = db.execute('select material_cost_conf from product_def where id=?',(productId,)).fetchone()
-            materialCostConf = json.loads(materialCostRow['material_cost_conf'])
-            for materialCost in materialCostConf:
-                materialId=int(materialCost['materialId'])
-                materialCost = int(materialCost['materialCost'])
+            # materialCostRow = db.execute('select material_cost_conf from product_def where id=?',(productId,)).fetchone()
+            # materialCostConf = json.loads(materialCostRow['material_cost_conf'])
+            # for materialCost in materialCostConf:
+            for i in range(len(material)):
+                materialId=int(material[i])
+                materialCost = float(materialCostProd[i])
                 materialAmount = db.execute('select name,count from material where id=?',(materialId,)).fetchone()
-                materialLeft = int(materialAmount['count'])-materialCost*amount
+                materialLeft = float(materialAmount['count'])-materialCost*amount
                 if(materialLeft<0):
                     flash("原材料'"+str(materialAmount['name'])+"'不足")
                     return redirect(url_for('product.index'))
                 db.execute('UPDATE material set count=? where id=?',(materialLeft,materialId))
             product = db.execute('select * from product_def where id=?',(productId,)).fetchone()
-
 
             newInventory = amount+product['inventory']
             db.execute('UPDATE product_def set inventory=? where id=?',(newInventory,productId))
@@ -199,51 +223,15 @@ def manufacture():
         ' FROM product_def'
         ' ORDER BY id DESC'
     ).fetchall()
-    return render_template('product/manufacture.html', products=products)
-#
-# def get_post(id, check_author=True):
-#     post = get_db().execute(
-#         'SELECT p.id, title, body, created, author_id, username'
-#         ' FROM post p JOIN user u ON p.author_id = u.id'
-#         ' WHERE p.id = ?',
-#         (id,)
-#     ).fetchone()
-#
-#     if post is None:
-#         abort(404, "Post id {0} doesn't exist.".format(id))
-#
-#     if check_author and post['author_id'] != g.user['id']:
-#         abort(403)
-#
-#     return post
-#
-# @bp.route('/<int:id>/update', methods=('GET', 'POST'))
-# @login_required
-# def update(id):
-#     post = get_post(id)
-#
-#     if request.method == 'POST':
-#         title = request.form['title']
-#         body = request.form['body']
-#         error = None
-#
-#         if not title:
-#             error = 'Title is required.'
-#
-#         if error is not None:
-#             flash(error)
-#         else:
-#             db = get_db()
-#             db.execute(
-#                 'UPDATE post SET title = ?, body = ?'
-#                 ' WHERE id = ?',
-#                 (title, body, id)
-#             )
-#             db.commit()
-#             return redirect(url_for('blog.index'))
-#
-#     return render_template('blog/update.html', post=post)
-#
+
+    materials = db.execute(
+        'SELECT id, name, count'
+        ' FROM material'
+        ' ORDER BY id DESC'
+    ).fetchall()
+
+    return render_template('product/manufacture.html', products=products,materials=materials)
+
 @bp.route('/delete', methods=('POST',))
 @login_required
 def delete():

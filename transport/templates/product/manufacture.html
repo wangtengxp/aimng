@@ -13,7 +13,7 @@
     <div class="layui-form-item">
       <label class="layui-form-label">选择商品</label>
       <div class="layui-input-block">
-        <select name="product" lay-search>
+        <select name="product" lay-search lay-filter="onSelectProduct">
           <option value="">请选择要生产的商品</option>
           {% for product in products %}
           <option value="{{product['id']}}">{{product["name"]}}</option>
@@ -27,14 +27,70 @@
         <input name="amount" class="layui-input" id="amount" placeholder="请输入生产数量" required>
       </div>
     </div>
-    <input type="submit" value="确定" class="layui-btn">
+    <input id="submit" type="submit" value="确定" class="layui-btn">
 
   </form>
 </div>
 </div>
 </div>
 
+<script type="text/javascript">
+    layui.use(['form'],function(){
+        let form = layui.form;
+        form.on('select(onSelectProduct)',function(data){
+            var productId = $("select[name=product]").val();
+            $.ajax({
+              type:"POST",
+              url:"/product/findById/"+productId,
+              async:true,
+              dataType:"json",
+              success:function (productData){
+                if(productData.material_cost_conf ){
+                    $.ajax({
+                      type:"POST",
+                      url:"/material/getMaterials",
+                      async:true,
+                      dataType:"json",
+                      success:function (materials){
 
+                        for(var costIdx=0;costIdx< productData.material_cost_conf.length;costIdx++){
+                            var materialId = productData.material_cost_conf[costIdx].materialId;
+                            var materialCost = productData.material_cost_conf[costIdx].materialCost;
+
+
+                            var selectionStr = "<div class=\"layui-form-item\">\n" +
+                                "    <label class=\"layui-form-label\">原材料</label>\n" +
+                                "    <div class=\"layui-input-block\">" +
+                                "<select name=material lay-verify='required' lay-search>"+
+                                "<option value=''>请选择原材料</option>"
+                              for(var i=0;i<materials.length;i++){
+                                var option="";
+                                if(materialId==materials[i].id){
+                                    option="<option value="+materials[i].id +" selected>" +materials[i].name+",剩余库存"+materials[i].count+"</option>";
+                                }else{
+                                    option="<option value="+materials[i].id +">" +materials[i].name+",剩余库存"+materials[i].count+"</option>";
+                                }
+
+                                selectionStr+=option
+                              }
+
+                            selectionStr+="</select>"
+                            var inputStr = "<input placeholder='请填写原材料消耗' class='layui-input' value='"+materialCost+"' name=materialCost required></div></div>"
+                            $("#submit").before(selectionStr+inputStr);
+                            form.render();
+                        }
+
+                      }
+                    });
+
+                }
+
+              }
+            });
+
+        });
+    });
+</script>
 
 {% endblock %}
 

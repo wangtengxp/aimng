@@ -17,6 +17,18 @@ def index():
         ' ORDER BY id'
     ).fetchall()
     return render_template('customer/list.html', customers=customers)
+@bp.route('/detail/<int:customerId>', methods=('GET', 'POST'))
+@login_required
+def accountsDetail(customerId):
+    db = get_db()
+    if customerId>0:
+        accounts = db.execute('select cus_acc.amount,cus_acc.amount_type,cus_acc.create_time,cst.name from customer_accounts cus_acc'
+                              ' left join customer cst on cus_acc.customer_id=cst.id where customer_id=?',(customerId,)).fetchall()
+        return render_template('customer/detail.html',accounts=accounts)
+    accounts = db.execute(
+        'select cus_acc.amount,cus_acc.amount_type,cus_acc.create_time,cst.name from customer_accounts cus_acc'
+        ' left join customer cst on cus_acc.customer_id=cst.id').fetchall()
+    return render_template('customer/detail.html',accounts=accounts)
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
@@ -51,20 +63,24 @@ def create():
 @bp.route('/receiveMoney', methods=('GET', 'POST'))
 @login_required
 def receiveMoney():
-    if request.method == 'POST':
-        id = request.form['id']
-        money = float(request.form['money'])
+    id = request.form['id']
+    print('receiveMoney:%s', id)
+    money = float(request.form['money'])
+    print('receiveMoney:%s', money)
 
-        error = None
-        if not money:
-            error = '请填写金额'
+    error = None
+    if not money:
+        error = '请填写金额'
 
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            customerRow = db.execute('SELECT receivable from customer where id= ?', (id,)).fetchone()
-            receivable = float(customerRow['receivable'])
-            db.execute('UPDATE customer set receivable=? where id=?', (receivable-money, id))
-            db.commit()
+    if error is not None:
+        flash(error)
+    else:
+        db = get_db()
+        #新建账务明细
+        db.execute('insert into customer_accounts (customer_id,entity_type,entity_id,amount,amount_type,create_time)'
+                   ' VALUES (?,?,?,?,?,?)',(id,'CUSTOMER',id,money,'PAYMENT',time.strftime('%Y-%m-%d %H:%M:%S')))
+        customerRow = db.execute('SELECT receivable from customer where id= ?', (id,)).fetchone()
+        receivable = float(customerRow['receivable'])
+        db.execute('UPDATE customer set receivable=? where id=?', (receivable-money, id))
+        db.commit()
     return redirect(url_for('customer.index'))

@@ -27,6 +27,7 @@
           <th>销售员</th>
           <th>客户</th>
           <th>销售数量</th>
+          <th>预付款</th>
           <th>已发货数量</th>
           <th>操作</th>
         </tr>
@@ -40,6 +41,12 @@
           <td>{{sellRecord['seller_name']}}</td>
           <td>{{sellRecord['customer_name']}}</td>
           <td>{{sellRecord['amount']}}</td>
+          {% if sellRecord['prepayments'] != None %}
+          <td>{{sellRecord['prepayments']}}</td>
+          {% else %}
+          <td>0</td>
+          {% endif %}
+
           {% if sellRecord['transport_amount'] == None %}
           <td>0</td>
           {% else %}

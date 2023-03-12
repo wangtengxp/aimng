@@ -14,8 +14,9 @@ bp = Blueprint('sell_record', __name__,url_prefix='/sell_record')
 def index():
     db = get_db()
     sellRecords = db.execute(
-        'SELECT sr.id, sr.create_time, sr.amount,pd.name as product_name,sl.name as seller_name,cst.name as customer_name,sr.transported_amount as transported_amount'
+        'SELECT sr.id, sr.create_time, sr.amount,pd.name as product_name,sl.name as seller_name,cst.name as customer_name,sr.transported_amount as transported_amount,cus_acc.amount as prepayments'
         ' FROM sell_record sr left join product_def pd on sr.product_id=pd.id left join seller sl on sr.seller_id= sl.id left join customer cst on sr.customer_id=cst.id'
+        ' left join customer_accounts cus_acc on sr.id=cus_acc.entity_id and cus_acc.entity_type="SELL_RECORD"'
         ' ORDER BY sr.id DESC'
     ).fetchall()
     return render_template('sell_record/list.html', sellRecords=sellRecords)
@@ -28,6 +29,7 @@ def create():
         amount = request.form['amount']
         seller_id = request.form['seller_id']
         customer_id = request.form['customer_id']
+        prepayments = float(request.form['prepayments'])
 
         error = None
 
@@ -48,11 +50,15 @@ def create():
             db.execute('update product_def set inventory=? where id=?', (inventoryLeft, product_id))
 
             #创建销售记录
-            db.execute(
+            sellRecordRow = db.execute(
                 'INSERT INTO sell_record (product_id, amount,seller_id,customer_id,status,create_time)'
                 ' VALUES (?, ?, ?, ?, ?,?)',
                 (product_id, amount,seller_id,customer_id,'INIT',time.strftime('%Y-%m-%d %H:%M:%S'))
             )
+            # 创建预付款
+            if prepayments > 0.01:
+                db.execute('INSERT INTO customer_accounts (customer_id,amount,entity_type,entity_id,amount_type,create_time)'
+                           ' VALUES (?,?,?,?,?,?)',(customer_id,prepayments,'SELL_RECORD',sellRecordRow.lastrowid,'PREPAYMENTS',time.strftime('%Y-%m-%d %H:%M:%S')))
             db.commit()
             return redirect(url_for('sell_record.index'))
 

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}账务明细{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="page-body">
+    <table class="layui-table" lay-even>
+      <thead>
+        <tr>
+          <th>客户名称</th>
+          <th>金额</th>
+          <th>类型</th>
+          <th>时间</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for account in accounts %}
+        <tr>
+          <td>{{account['name']}}</td>
+          <td>{{account['amount']}}</td>
+          {% if account['amount_type']=='PREPAYMENTS'%}
+          <td>预付款</td>
+          {%else%}
+          <td>付款</td>
+          {%endif%}
+          <td>{{account['create_time']}}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

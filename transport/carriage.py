@@ -20,9 +20,10 @@ bp = Blueprint('carriage', __name__,url_prefix='/carriage')
 def index():
     db = get_db()
     transports = db.execute(
-        'SELECT id,sell_record_id, amount,product_price, address,driver_name,driver_cellphone,driver_liscense,create_time'
-        ' FROM transport'
-        ' ORDER BY id DESC'
+        'SELECT tsp.id,tsp.sell_record_id, tsp.amount,tsp.product_price, tsp.address,tsp.driver_name,tsp.driver_cellphone,tsp.driver_liscense,tsp.create_time,'
+        'prod_def.name as product_name'
+        ' FROM transport tsp left join sell_record sr on tsp.sell_record_id=sr.id left join product_def prod_def on sr.product_id=prod_def.id'
+        ' ORDER BY tsp.id DESC'
     ).fetchall()
     return render_template('carriage/list.html', transports=transports)
 
