@@ -6,6 +6,7 @@ from werkzeug.exceptions import abort
 from .auth import login_required
 from .db import get_db
 import json
+import time
 
 bp = Blueprint('material', __name__,url_prefix='/material')
 
@@ -51,9 +52,9 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO material (name, count)'
-                ' VALUES (?, ?)',
-                (name, count)
+                'INSERT INTO material (name, count,create_time)'
+                ' VALUES (?, ?,?)',
+                (name, count,time.strftime('%Y-%m-%d %H:%M:%S'))
             )
             db.commit()
             return redirect(url_for('material.index'))

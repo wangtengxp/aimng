@@ -14,13 +14,17 @@
     <select name="sell_record_id" lay-verify="required">
       <option value="">请选择销售订单号</option>
       {% for sellRecord in sellRecords %}
-      <option value="{{sellRecord['id']}}">订单号:{{sellRecord["id"]}},商品名称:{{sellRecord['product_name']}},客户名称:{{sellRecord['customer_name']}},已发货:{{sellRecord['transported_amount']}}</option>
+      <option value="{{sellRecord['id']}}">订单号:{{sellRecord["id"]}},商品名称:{{sellRecord['product_name']}},客户名称:{{sellRecord['customer_name']}},订单量:{{sellRecord['amount']}},已发货:{{sellRecord['transported_amount']}}</option>
       {% endfor %}
     </select>
     </div>
 
     <div class="layui-form-item">
     <input name="amount" class="layui-input" id="amount" placeholder="请输入发货数量" required>
+    </div>
+
+    <div class="layui-form-item">
+    <input name="productPrice" class="layui-input" id="productPrice" placeholder="请输入发货总金额" required>
     </div>
 
     <div class="layui-form-item">

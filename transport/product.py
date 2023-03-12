@@ -6,6 +6,7 @@ from werkzeug.exceptions import abort
 from .auth import login_required
 from .db import get_db
 import json
+import time
 
 bp = Blueprint('product', __name__,url_prefix='/product')
 
@@ -83,9 +84,9 @@ def create():
             materialCostJson=json.dumps(materialCostArray)
             db = get_db()
             db.execute(
-                'INSERT INTO product_def (name, unit, specification,price,creator,material_cost_conf,comment)'
-                ' VALUES (?, ?, ?, ?, ?,?,?)',
-                (name, unit, specification,price, g.user['username'],materialCostJson,comment)
+                'INSERT INTO product_def (name, unit, specification,price,creator,material_cost_conf,comment,create_time)'
+                ' VALUES (?, ?, ?, ?, ?,?,?,?)',
+                (name, unit, specification,price, g.user['username'],materialCostJson,comment,time.strftime('%Y-%m-%d %H:%M:%S'))
             )
             db.commit()
             return redirect(url_for('product.index'))
@@ -169,9 +170,9 @@ def manufacture():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO manufacture_record (product_id, amount)'
-                ' VALUES (?, ?)',
-                (productId, amount)
+                'INSERT INTO manufacture_record (product_id, amount,create_time)'
+                ' VALUES (?, ?,?)',
+                (productId, amount,time.strftime('%Y-%m-%d %H:%M:%S'))
             )
 
             materialCostRow = db.execute('select material_cost_conf from product_def where id=?',(productId,)).fetchone()

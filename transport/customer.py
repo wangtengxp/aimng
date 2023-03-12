@@ -4,6 +4,7 @@ from flask import (
 
 from .auth import login_required
 from .db import get_db
+import time
 
 bp = Blueprint('customer', __name__,url_prefix='/customer')
 
@@ -38,9 +39,9 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO customer (name, cellphone,city,province,address)'
-                ' VALUES (?, ?, ?, ?, ?)',
-                (name, cellphone,city,province,address)
+                'INSERT INTO customer (name, cellphone,city,province,address,create_time)'
+                ' VALUES (?, ?, ?, ?, ?,?)',
+                (name, cellphone,city,province,address,time.strftime('%Y-%m-%d %H:%M:%S'))
             )
             db.commit()
             return redirect(url_for('customer.index'))

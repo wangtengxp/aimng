@@ -5,6 +5,7 @@ from werkzeug.exceptions import abort
 
 from .auth import login_required
 from .db import get_db
+import time
 import json
 
 bp = Blueprint('sell_record', __name__,url_prefix='/sell_record')
@@ -38,19 +39,19 @@ def create():
         else:
             db = get_db()
             # 查询产品库存
-            inventoryRow = db.execute('select amount from product_inventory where product_id=?',
+            productRow = db.execute('select inventory from product_def where id=?',
                                       (product_id,)).fetchone()
-            inventoryAmount = float(inventoryRow['amount'])
+            inventoryAmount = float(productRow['inventory'])
             #产品库存允许为负数
             inventoryLeft = inventoryAmount - float(amount)
             # 更新产品库存
-            db.execute('update product_inventory set amount=? where product_id=?', (inventoryLeft, product_id))
+            db.execute('update product_def set inventory=? where id=?', (inventoryLeft, product_id))
 
             #创建销售记录
             db.execute(
-                'INSERT INTO sell_record (product_id, amount,seller_id,customer_id,status)'
-                ' VALUES (?, ?, ?, ?, ?)',
-                (product_id, amount,seller_id,customer_id,'INIT')
+                'INSERT INTO sell_record (product_id, amount,seller_id,customer_id,status,create_time)'
+                ' VALUES (?, ?, ?, ?, ?,?)',
+                (product_id, amount,seller_id,customer_id,'INIT',time.strftime('%Y-%m-%d %H:%M:%S'))
             )
             db.commit()
             return redirect(url_for('sell_record.index'))

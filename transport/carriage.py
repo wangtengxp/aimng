@@ -8,6 +8,7 @@ from .db import get_db
 import json
 import os
 import uuid
+import time
 
 UPLOAD_FOLDER_RELATIVE='/static/uploads/driver_liscense/'
 UPLOAD_FOLDER = 'D:/github/aimng/transport'+UPLOAD_FOLDER_RELATIVE
@@ -19,7 +20,7 @@ bp = Blueprint('carriage', __name__,url_prefix='/carriage')
 def index():
     db = get_db()
     transports = db.execute(
-        'SELECT id,sell_record_id, amount, address,driver_name,driver_cellphone,driver_liscense'
+        'SELECT id,sell_record_id, amount,product_price, address,driver_name,driver_cellphone,driver_liscense,create_time'
         ' FROM transport'
         ' ORDER BY id DESC'
     ).fetchall()
@@ -72,11 +73,15 @@ def uploaded_file(filename):
 def create():
     if request.method == 'POST':
         sell_record_id = request.form['sell_record_id']
+        #发货量
         amount = request.form['amount']
+        #发货总金额
+        productPrice = float(request.form['productPrice'])
         address = request.form['address']
         driver_name = request.form['driver_name']
         driver_cellphone = request.form['driver_cellphone']
         driver_liscense = request.form['driver_liscense']
+
 
         error = None
 
@@ -87,13 +92,16 @@ def create():
             flash(error)
         else:
             db = get_db()
+            #创建发货单
             db.execute(
-                'INSERT INTO transport (sell_record_id, amount, address,driver_name,driver_cellphone,driver_liscense)'
-                ' VALUES (?, ?, ?, ?, ?,?)',
-                (sell_record_id, amount, address,driver_name,driver_cellphone,driver_liscense)
+                'INSERT INTO transport (sell_record_id, amount,product_price, address,driver_name,driver_cellphone,driver_liscense,create_time)'
+                ' VALUES (?, ?, ?, ?, ?,?,?,?)',
+                (sell_record_id, amount,productPrice, address,driver_name,driver_cellphone,driver_liscense,time.strftime('%Y-%m-%d %H:%M:%S'))
             )
             #更新销售订单已发货数量
-            sellRecordRow = db.execute('SELECT transported_amount,amount from sell_record where id= ?',(sell_record_id,)).fetchone()
+            sellRecordRow = db.execute('SELECT transported_amount,amount,product_id,customer_id from sell_record where id= ?',(sell_record_id,)).fetchone()
+            productId = int(sellRecordRow['product_id'])
+            customerId = int(sellRecordRow['customer_id'])
             transportedAmount = float(sellRecordRow['transported_amount'])
             newTransportedAmount =transportedAmount+float(amount)
             sellAmount=float(sellRecordRow['amount'])
@@ -102,6 +110,14 @@ def create():
                 return redirect(url_for('carriage.index'))
 
             db.execute('update sell_record set transported_amount=? where id=?',(newTransportedAmount,sell_record_id))
+            #减少库存
+            # sellProduct = db.execute('SELECT inventory from product_def where id=?',(productId,)).fetchone()
+            # productInventory = float(sellProduct['inventory'])
+            # db.execute('UPDATE product_def set inventory=? where id=?',(productInventory-amount,productId))
+            #增加客户应收
+            customer = db.execute('SELECT receivable from customer where id=?',(customerId,)).fetchone()
+            customerReceivable = float(customer['receivable'])
+            db.execute('UPDATE customer set receivable=? where id=?',(customerReceivable+productPrice,customerId))
             db.commit()
             return redirect(url_for('carriage.index'))
     db = get_db()

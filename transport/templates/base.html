@@ -46,13 +46,13 @@
         <li class="layui-nav-item"><a href="{{ url_for('auth.login') }}">登录</a></li>
         {% endif %}
 
-        {% if g.user['role']=='ADMIN' %}
+<!--        {% if g.user['role']=='ADMIN' %}-->
         <li class="layui-nav-item"><a class="nav-link" href="{{url_for('material.index')}}">原材料</a></li>
         <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('product.index')}}">商品列表</a></li>
-        {% endif %}
-        {% if g.user['role']=='STORE_MANAGER' or g.user['role']=='ADMIN'%}
-        <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('inventory.index')}}">库存</a></li>
-        {% endif %}
+<!--        {% endif %}-->
+<!--        {% if g.user['role']=='STORE_MANAGER' or g.user['role']=='ADMIN'%}-->
+<!--        <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('inventory.index')}}">库存</a></li>-->
+<!--        {% endif %}-->
         {% if g.user['role']=='ADMIN' %}
         <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('customer.index')}}">客户往来账</a></li>
         <li class="layui-nav-item"><a class="nav-link"  href="{{url_for('seller.index')}}">销售人员信息</a></li>
