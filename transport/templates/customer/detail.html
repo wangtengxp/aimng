@@ -13,6 +13,7 @@
           <th>金额</th>
           <th>类型</th>
           <th>时间</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -26,6 +27,7 @@
           <td>付款</td>
           {%endif%}
           <td>{{account['create_time']}}</td>
+          <td><a href="{{url_for('customer.printDetail',accountsId=account['id'])}}" class="layui-btn"  lay-event="edit">打印预览</a></td>
         </tr>
       {% endfor %}
       </tbody>

@@ -22,13 +22,21 @@ def index():
 def accountsDetail(customerId):
     db = get_db()
     if customerId>0:
-        accounts = db.execute('select cus_acc.amount,cus_acc.amount_type,cus_acc.create_time,cst.name from customer_accounts cus_acc'
+        accounts = db.execute('select cus_acc.id,cus_acc.amount,cus_acc.amount_type,cus_acc.create_time,cst.name from customer_accounts cus_acc'
                               ' left join customer cst on cus_acc.customer_id=cst.id where customer_id=?',(customerId,)).fetchall()
         return render_template('customer/detail.html',accounts=accounts)
     accounts = db.execute(
         'select cus_acc.amount,cus_acc.amount_type,cus_acc.create_time,cst.name from customer_accounts cus_acc'
         ' left join customer cst on cus_acc.customer_id=cst.id').fetchall()
     return render_template('customer/detail.html',accounts=accounts)
+
+@bp.route('/printDetail/<int:accountsId>', methods=('GET', 'POST'))
+@login_required
+def printDetail(accountsId):
+    db = get_db()
+    account = db.execute('select cus_acc.amount,cus_acc.amount_type,cus_acc.create_time,cst.name from customer_accounts cus_acc'
+                          ' left join customer cst on cus_acc.customer_id=cst.id where cus_acc.id=?',(accountsId,)).fetchone()
+    return render_template('customer/printDetail.html',account=account)
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required

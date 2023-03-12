@@ -40,8 +40,11 @@
           <td>{{customer['receivable']}}</td>
 <!--          <td>{{customer['province']}}</td>-->
 <!--          <td>{{customer['address']}}</td>-->
-          <td><button class="layui-btn" onclick="receiveMoney('{{customer['id']}}','{{customer['name']}}')">收款</button>
+          <td>
+            <div class="layui-table-cell laytable-cell-1-0-10">
+            <button class="layui-btn" onclick="receiveMoney('{{customer['id']}}','{{customer['name']}}')">收款</button>
           <a href="{{url_for('customer.accountsDetail',customerId=customer['id'])}}" class="layui-btn"  lay-event="edit">明细</a>
+            </div>
           </td>
         </tr>
       {% endfor %}
