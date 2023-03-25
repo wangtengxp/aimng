@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}创建供应商{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+<div class="layui-container">
+<div class="layui-row">
+<div class="layui-col-md9 site-content">
+  <form id="supplierForm" method="post" class="layui-form layui-form-pane">
+    <div class="layui-form-item">
+    <label class="layui-form-label" for="name">供应商名称</label>
+      <div class="layui-input-block">
+        <input name="name" class="layui-input" id="name" value="{{ request.form['name'] }}" required>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">供应商手机</label>
+      <div class="layui-input-block">
+        <input class="layui-input" name="cellphone" id="cellphone" value="{{ request.form['cellphone'] }}" required>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">联系人</label>
+      <div class="layui-input-block">
+        <input class="layui-input" name="contacts" id="contacts" value="{{ request.form['contacts'] }}" required>
+      </div>
+    </div>
+
+    <input type="submit" class="layui-btn" value="保存">
+
+  </form>
+</div>
+</div>
+</div>
+
+
+
+{% endblock %}
+
+

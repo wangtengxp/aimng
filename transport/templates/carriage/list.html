@@ -14,7 +14,7 @@
     <div class="col-4">
       <div class="row g-2 align-items-center mb-n3">
   <div class="col-2 col-sm-2 col-md-2 col-xl mb-3">
-    <a class="layui-btn layui-btn-normal" href="{{ url_for('carriage.create') }}">新建发货单</a>
+    <a class="layui-btn layui-btn-normal" href="{{ url_for('carriage.create',sellRecordId=0) }}">新建发货单</a>
   </div>
         </div>
       </div>
@@ -34,6 +34,7 @@
           <th>司机姓名</th>
           <th>司机电话</th>
           <th>驾照</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -49,6 +50,7 @@
           <td>{{transport['driver_name']}}</td>
           <td>{{transport['driver_cellphone']}}</td>
           <td><img src="../..{{transport['driver_liscense']}}" onclick="showLiscense(this)"></td>
+          <td><a href="{{url_for('carriage.printCarriage',id=transport['id'])}}" class="layui-btn"  lay-event="edit">打印预览</a></td>
         </tr>
       {% endfor %}
       </tbody>

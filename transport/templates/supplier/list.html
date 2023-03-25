@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  {% if g.user %}
+  <div class="container-xl">
+  <div class="col-6 col-sm-4 col-md-2 col-xl mb-3">
+    <a class="layui-btn layui-btn-normal" href="{{ url_for('supplier.create') }}">新建供应商</a>
+  </div>
+  </div>
+  {% endif %}
+
+    <table class="layui-table" lay-even>
+      <thead>
+        <tr>
+          <th>供应商名称</th>
+          <th>联系人</th>
+           <th>手机</th>
+          <th>已付款</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for supplier in suppliers %}
+        <tr>
+          <td> {{supplier['name']}}</td>
+          <td>{{supplier['contacts']}}</td>
+          <td>{{supplier['cellphone']}}</td>
+          <td>
+           {% if supplier['paid']==None %}
+            0
+          {%else%}
+          {{supplier['paid']}}
+          {%endif%}
+          </td>
+          <td>
+            <div class="layui-table-cell laytable-cell-1-0-10">
+<!--            <button class="layui-btn" onclick="receiveMoney('{{supplier['id']}}','{{supplier['name']}}')">收款</button>-->
+          <a href="{{url_for('supplier.accountsDetail',supplierId=supplier['id'])}}" class="layui-btn"  lay-event="edit">明细</a>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+</div>
+<script type="text/javascript">
+  function receiveMoney(id,name) {
+    layer.prompt({title: '收到客户:'+name+'的付款(单位元)'}, function(money, index){
+      layer.close(index);
+      var data={'id':id,'money':money}
+      $.ajax({
+          type:"POST",
+          url:"/supplier/receiveMoney",
+          data:data,
+          async:true,
+          dataType:"json",
+          success:function (data){
+
+          }
+        });
+      location.reload();
+    });
+  }
+</script>
+{% endblock %}

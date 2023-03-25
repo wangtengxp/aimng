@@ -52,7 +52,13 @@
           {% else %}
           <td>{{sellRecord['transported_amount']}}</td>
           {% endif %}
-          <td><input type="button" class="layui-btn layui-btn-normal" onclick="deleteSellRecord({{sellRecord['id']}})" value="删除" id="{{sellRecord['id']}}" /></td>
+          <td>
+            <div class="layui-table-cell laytable-cell-1-0-10">
+              <a href="{{ url_for('carriage.create',sellRecordId=sellRecord['id']) }}" class="layui-btn">发货</a>
+            <input type="button" class="layui-btn layui-btn" onclick="deleteSellRecord({{sellRecord['id']}})" value="删除" id="{{sellRecord['id']}}" />
+
+            </div>
+          </td>
         </tr>
       {% endfor %}
       </tbody>

@@ -65,5 +65,8 @@ def create_app(test_config=None):
     from . import sell_record
     app.register_blueprint(sell_record.bp)
 
+    from . import supplier
+    app.register_blueprint(supplier.bp)
+
     return app
 app=create_app()
