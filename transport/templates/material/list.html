@@ -69,58 +69,79 @@
               {{material['tag']}}
             {% endif %}
           </td>
-          <td><button class="layui-btn" onclick="modifyLayer('{{material['id']}}','{{material['name']}}')">进货</button></td>
+          <td><button class="layui-btn" onclick="modifyLayer('{{material['id']}}','{{material['name']}}')">修改</button>
+          <button class="layui-btn" onclick="importMaterial('{{material['id']}}','{{material['name']}}')">进货</button>
+          </td>
         </tr>
       {% endfor %}
       </tbody>
     </table>
   </div>
+
+  <div id="importForm" style="display:none;">
+  <form class="layui-form">
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">供应商</label>
+      <div class="layui-input-block">
+        <select name="supplierId" lay-verify='required' lay-search>
+                    <option value=''>请选择供应商</option>
+                    {% for supplier in suppliers %}
+                        <option value="{{supplier.id}}">{{supplier.name}}</option>
+                    {% endfor %}
+                </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">进货量</label>
+      <div class="layui-input-block">
+        <input type="text" name="count" lay-verify="required" autocomplete="off" placeholder="请输入进货量" class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">付款金额</label>
+      <div class="layui-input-block">
+        <input type="text" name="amount" lay-verify="required" autocomplete="off" placeholder="请输入付款金额" class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" lay-submit lay-filter="importMaterialSubmit" onclick="submitImportMaterial">确定</button>
+      </div>
+    </div>
+  </form>
+</div>
     </div>
 
 
-<!--<div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
-<!--  <div class="modal-dialog">-->
-<!--    <div class="modal-content">-->
-<!--      <div class="modal-header">-->
-<!--        <h1 class="modal-title fs-5" id="exampleModalLabel">修改原材料数量</h1>-->
-<!--        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--      </div>-->
-<!--      <div class="modal-body">-->
-<!--        <form id="modifyMaterialForm">-->
-<!--          <div class="mb-3">-->
-<!--            <label for="materialAmount" class="col-form-label">请输入数量:</label>-->
-<!--            <input type="text" name="amount" class="form-control" id="materialAmount">-->
-<!--            <input type="text" name="id" class="form-control" id="materialId" hidden="true">-->
-<!--          </div>-->
-<!--        </form>-->
-<!--      </div>-->
-<!--      <div class="modal-footer">-->
-<!--        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>-->
-<!--        <button type="button" class="btn btn-primary" id="modifyMaterial">确定</button>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
 
 <script type="text/javascript">
-  // const modifyModal = document.getElementById('modifyModal')
-  // modifyModal.addEventListener('show.bs.modal', event => {
-  //   // Button that triggered the modal
-  //   const button = event.relatedTarget
-  //   // Extract info from data-bs-* attributes
-  //   const id = button.getAttribute('data-bs-whatever')
-  //   // If necessary, you could initiate an AJAX request here
-  //   // and then do the updating in a callback.
-  //   //
-  //   // Update the modal's content.
-  //   // const modalTitle = modifyModal.querySelector('.modal-title')
-  //   // const materialAmount = modifyModal.querySelector('#materialAmount');
-  //   const materialId = modifyModal.querySelector('#materialId');
-  //
-  //   // modalTitle.textContent = `New message to ${recipient}`
-  //   // materialAmount.value = recipient;
-  //   materialId.value=id
-  // });
+
+function importMaterial(id,name){
+
+  layui.use(['layer', 'form'], function(){
+      var layer = layui.layer;
+      var form = layui.form;
+    layer.open({
+              type: 1,
+              title: name+'进货',
+              content: $('#importForm').html(),
+              area: ['500px', '300px'],
+              success: function(layero, index){
+                  // 监听表单提交
+                  form.on('submit(importMaterialSubmit)', function(data){
+                      console.log(data.field);
+                      layer.msg("提交成功");
+                      layer.close(index);
+                      return false;
+                  });
+              }
+          });
+          form.render();
+});
+}
 
   function modifyLayer(id,name) {
     layer.prompt({title: '修改原材料数量:'+name}, function(amount, index){

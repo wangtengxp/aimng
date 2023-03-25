@@ -18,7 +18,8 @@ def index():
         ' FROM material'
         ' ORDER BY id DESC'
     ).fetchall()
-    return render_template('material/list.html', materials=materials)
+    suppliers = db.execute('SELECT id,name from supplier order by id DESC').fetchall()
+    return render_template('material/list.html', materials=materials,suppliers=suppliers)
 
 @bp.route('/getMaterials' , methods=('GET', 'POST'))
 def material():

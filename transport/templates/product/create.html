@@ -57,7 +57,7 @@
             <label class="layui-form-label">原材料</label>
             <div class="layui-input-block">
 <!--                <input name="material" class="layui-input" value="{{ materialCost or '' }}">-->
-                <select name=material lay-verify='required' lay-search>
+                <select name="material" lay-verify="required" lay-search>
                     <option value=''>请选择原材料</option>
                     {% for material in materials%}
                         {% if material.id==materialCost.materialId %}
