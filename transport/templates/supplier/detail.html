@@ -12,6 +12,8 @@
           <th>客户名称</th>
           <th>金额</th>
           <th>类型</th>
+          <th>商品名称</th>
+          <th>商品数量</th>
           <th>时间</th>
           <th>操作</th>
         </tr>
@@ -19,15 +21,17 @@
       <tbody>
       {% for account in accounts %}
         <tr>
-          <td>{{account['name']}}</td>
+          <td>{{account['supplier_name']}}</td>
           <td>{{account['amount']}}</td>
-          {% if account['amount_type']=='PREPAYMENTS'%}
-          <td>预付款</td>
+          {% if account['amount_type']=='IMPORT_MATERIAL'%}
+          <td>原材料进货</td>
           {%else%}
           <td>付款</td>
           {%endif%}
+          <td>{{account['material_name']}}</td>
+          <td>{{account['count']}}</td>
           <td>{{account['create_time']}}</td>
-          <td><a href="{{url_for('customer.printDetail',accountsId=account['id'])}}" class="layui-btn"  lay-event="edit">打印预览</a></td>
+          <td><a href="{{url_for('supplier.printDetail',accountsId=account['id'])}}" class="layui-btn"  lay-event="edit">打印预览</a></td>
         </tr>
       {% endfor %}
       </tbody>

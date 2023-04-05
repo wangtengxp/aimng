@@ -207,9 +207,6 @@ def manufacture():
                 materialCost = float(materialCostProd[i])
                 materialAmount = db.execute('select name,count from material where id=?',(materialId,)).fetchone()
                 materialLeft = float(materialAmount['count'])-materialCost*amount
-                if(materialLeft<0):
-                    flash("原材料'"+str(materialAmount['name'])+"'不足")
-                    return redirect(url_for('product.index'))
                 db.execute('UPDATE material set count=? where id=?',(materialLeft,materialId))
             product = db.execute('select * from product_def where id=?',(productId,)).fetchone()
 

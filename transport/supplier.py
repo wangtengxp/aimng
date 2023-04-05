@@ -12,24 +12,24 @@ bp = Blueprint('supplier', __name__,url_prefix='/supplier')
 def index():
     db = get_db()
     suppliers = db.execute(
-        'SELECT id, name, cellphone,contacts,paid'
-        ' FROM supplier'
-        ' ORDER BY id desc'
+        'SELECT spl.id, name, cellphone,contacts,sum(spl_acc.amount) as paid'
+        ' FROM supplier spl left join supplier_accounts spl_acc on spl.id = spl_acc.supplier_id'
+        ' ORDER BY spl.id desc'
     ).fetchall()
     return render_template('supplier/list.html', suppliers=suppliers)
 @bp.route('/detail/<int:supplierId>', methods=('GET', 'POST'))
 @login_required
 def accountsDetail(supplierId):
     db = get_db()
-    accounts = db.execute('select spl_acc.id,spl_acc.amount,spl_acc.amount_type,spl_acc.create_time,spl_acc.count,spl.name m.name as material_name,m.unit as material_unit from supplier_accounts spl_acc'
-                          ' left join supplier spl on spl_acc.supplier_id=spl.id left join material m on spl_acc.entity_id=m.id and spl_acc.entity_type="MATERIAL" where supplier_id=?',(supplierId,)).fetchall()
+    accounts = db.execute('select spl_acc.id as id,spl_acc.amount,spl_acc.amount_type,spl_acc.create_time,spl_acc.count,spl.name as supplier_name, m.name as material_name,m.unit as material_unit from supplier_accounts spl_acc '
+                          ' left join supplier spl on spl_acc.supplier_id=spl.id left join material m on spl_acc.entity_id=m.id and spl_acc.entity_type="MATERIAL" where spl_acc.supplier_id=? order by id desc',(supplierId,)).fetchall()
     return render_template('supplier/detail.html',accounts=accounts)
 
 @bp.route('/printDetail/<int:accountsId>', methods=('GET', 'POST'))
 @login_required
 def printDetail(accountsId):
     db = get_db()
-    account = db.execute('select spl_acc.amount,spl_acc.amount_type,spl_acc.create_time,cst.name from supplier_accounts spl_acc'
+    account = db.execute('select spl_acc.amount,spl_acc.amount_type,spl_acc.create_time,spl.name from supplier_accounts spl_acc'
                           ' left join supplier spl on spl_acc.supplier_id=spl.id where spl_acc.id=?',(accountsId,)).fetchone()
     return render_template('supplier/printDetail.html',account=account)
 

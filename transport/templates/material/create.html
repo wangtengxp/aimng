@@ -10,16 +10,56 @@
     <div class="layui-form-item">
       <label class="layui-form-label" for="name">原材料名称</label>
       <div class="layui-input-block">
-        <input type="text" class="layui-input" placeholder="请输入原材料名称" name="name" id="name" value="{{ request.form['name'] }}" required>
+        <input type="text" class="layui-input" placeholder="请输入原材料名称" name="name" id="name" value="{{ material['name'] }}" required>
       </div>
       </div>
 
     <div class="layui-form-item">
       <label class="layui-form-label" for="count">原材料数量</label>
       <div class="layui-input-block">
-        <input type="text" class="layui-input" placeholder="请输入原材料数量" name="count" id="count" value="{{ request.form['count'] }}" required>
+        <input type="text" class="layui-input" placeholder="请输入原材料数量" name="count" id="count" value="{{ material['count'] }}" required>
       </div>
     </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">原材料类型</label>
+      <div class="layui-input-block">
+        <select name="type" lay-search lay-verify="required">
+        <option value="">请选择类型</option>
+        {% for key,value in materialTypes.items() %}
+          {% if material['type']==key%}
+            <option value="{{key}}" selected>{{value}}</option>
+          {% else %}
+            <option value="{{key}}">{{value}}</option>
+          {% endif %}
+        {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">单位</label>
+      <div class="layui-input-block">
+          <input type="radio" name="unit" id="bag" value="bag" title="袋" {{'checked' if material['unit']=='bag'}}/>
+          <input type="radio" name="unit" id="kg" value="kg" title="公斤" {{'checked' if material['unit']=='kg'}} />
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">备注</label>
+      <div class="layui-input-block">
+        <input type="text" class="layui-input" placeholder="请输入备注" name="comment" id="comment" value="{{ material['comment'] }}">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="count">标记</label>
+      <div class="layui-input-block">
+        <input type="text" class="layui-input" placeholder="请输入标记" name="tag" id="tag" value="{{ material['tag'] }}">
+      </div>
+    </div>
+
+
     <input type="submit" class="layui-btn" value="保存">
 
   </form>

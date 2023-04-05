@@ -15,8 +15,8 @@
         <h1 align="center">山东爱农种业有限公司</h1>
     </div>
     <div style="margin-top:30px">
-  <p align="center">收到客户"{{account['name']}}"{% if account['amount_type']=='PREPAYMENTS'%}
-          预付款
+  <p align="center">付给供应商"{{account['name']}}"{% if account['amount_type']=='IMPORT_MATERIAL'%}
+          进货款
           {%else%}
           付款
           {%endif%}
