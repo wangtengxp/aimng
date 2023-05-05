@@ -36,8 +36,6 @@ def create_app(test_config=None):
 
 
     db.init_app(app)
-
-
     app.register_blueprint(auth.bp)
 
 
@@ -67,6 +65,10 @@ def create_app(test_config=None):
 
     from . import supplier
     app.register_blueprint(supplier.bp)
+
+    from . import chat
+    app.register_blueprint(chat.bp)
+    chat.init_app(app)
 
     return app
 app=create_app()

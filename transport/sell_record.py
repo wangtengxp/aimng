@@ -14,7 +14,7 @@ bp = Blueprint('sell_record', __name__,url_prefix='/sell_record')
 def index():
     db = get_db()
     sellRecords = db.execute(
-        'SELECT sr.id, sr.create_time, sr.amount,pd.name as product_name,sl.name as seller_name,cst.name as customer_name,sr.transported_amount as transported_amount,cus_acc.amount as prepayments'
+        'SELECT sr.id, sr.create_time, sr.amount,sr.return_money,sr.surrogate_fees,sr.status,pd.name as product_name,sl.name as seller_name,cst.name as customer_name,sr.transported_amount as transported_amount,cus_acc.amount as prepayments'
         ' FROM sell_record sr left join product_def pd on sr.product_id=pd.id left join seller sl on sr.seller_id= sl.id left join customer cst on sr.customer_id=cst.id'
         ' left join customer_accounts cus_acc on sr.id=cus_acc.entity_id and cus_acc.entity_type="SELL_RECORD"'
         ' ORDER BY sr.id DESC'
@@ -81,5 +81,21 @@ def delete():
     id = request.form['id']
     db = get_db()
     db.execute('DELETE FROM sell_record WHERE id = ?', (id,))
+    db.commit()
+    return redirect(url_for('sell_record.index'))
+
+@bp.route('/returnProduct', methods=('POST',))
+@login_required
+def returnProduct():
+    id = request.form['sellRecordId']
+    return_type = str(request.form['return_type'])
+    return_money = request.form['return_money']
+    surrogate_fees = request.form['surrogate_fees']
+
+    db = get_db()
+    if "returnProductAndMoney"==return_type:
+        db.execute('update sell_record set return_money=?,status="RETURN_PRODUCT_MONEY" WHERE id = ?', (return_money, id))
+    elif "surrogate"==return_type:
+        db.execute('update sell_record set surrogate_fees=?,status="SURROGATE" WHERE id = ?', (surrogate_fees, id))
     db.commit()
     return redirect(url_for('sell_record.index'))
