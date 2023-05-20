@@ -15,9 +15,9 @@
       <option value="">请选择销售订单号</option>
       {% for sellRecord in sellRecords %}
       {% if sellRecordId == sellRecord["id"] %}
-        <option selected value="{{sellRecord['id']}}">订单号:{{sellRecord["id"]}},商品名称:{{sellRecord['product_name']}},客户名称:{{sellRecord['customer_name']}},订单量:{{sellRecord['amount']}},已发货:{{sellRecord['transported_amount']}}</option>
+      <option selected value="{{sellRecord['id']}}">订单号:{{sellRecord["id"]}},商品名称:{{sellRecord['product_name']}},剩余库存:{{sellRecord['product_inventory']}},客户名称:{{sellRecord['customer_name']}},客户应收:{{sellRecord['customer_receivable']}},订单量:{{sellRecord['amount']}},已发货:{{sellRecord['transported_amount']}}</option>
       {% else %}
-        <option value="{{sellRecord['id']}}">订单号:{{sellRecord["id"]}},商品名称:{{sellRecord['product_name']}},客户名称:{{sellRecord['customer_name']}},订单量:{{sellRecord['amount']}},已发货:{{sellRecord['transported_amount']}}</option>
+        <option value="{{sellRecord['id']}}">订单号:{{sellRecord["id"]}},商品名称:{{sellRecord['product_name']}},剩余库存:{{sellRecord['product_inventory']}},客户名称:{{sellRecord['customer_name']}},客户应收:{{sellRecord['customer_receivable']}},订单量:{{sellRecord['amount']}},已发货:{{sellRecord['transported_amount']}}</option>
       {% endif %}
       {% endfor %}
     </select>

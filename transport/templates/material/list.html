@@ -10,7 +10,7 @@
   <div class="layui-col-md9 site-content">
   {% if g.user %}
     <a class="layui-btn layui-btn-normal" href="{{ url_for('material.create') }}">创建原材料</a>
-
+  </div>
   {% endif %}
     <table class="layui-table" lay-even>
       <thead>
@@ -78,7 +78,7 @@
       {% endfor %}
       </tbody>
     </table>
-  </div>
+
 
   <div id="importFormDiv" style="display:none;">
   <form id="importForm" class="layui-form">

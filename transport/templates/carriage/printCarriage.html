@@ -15,14 +15,17 @@
         <h1 align="center">山东爱农种业有限公司——发货单</h1>
     </div>
     <div style="margin-top:30px">
-  <p align="auto-left"><span style="font-weight:bold">发货单号：</span> {{transport['id']}}，<span style="font-weight:bold">客户名称：</span>{{transport['customer_name']}}，<span style="font-weight:bold">产品名称：</span>{{transport['product_name']}}</p>
-     <p align="auto-left" style="margin-top:30px">     <span style="font-weight:bold">发货量：</span>{{transport['amount']}}
+  <p align="auto-left"><span style="font-weight:bold">发货单号：</span> {{transport['id']}}，<span style="font-weight:bold">客户名称：</span>{{transport['customer_name']}}<span style="font-weight:bold">产品名称：</span>{{transport['product_name']}}</p>
+     <p align="auto-left" style="margin-top:30px">     <span style="font-weight:bold">本次发货量：</span>{{transport['amount']}}
       {% if transport['unit'] == 'bag' %}
         袋
       {%elif transport['unit'] =='kg' %}
         公斤
       {%endif%}，
-  <span style="font-weight:bold">货物价值(人民币)：</span>{{transport['product_price']}}元，<span style="font-weight:bold">预付款剩余：</span>{{transport['receivable']}}</p>
+  <span style="font-weight:bold">本次发货金额(人民币)：</span>{{transport['product_price']}}元，<span style="font-weight:bold">预付款剩余：</span>{{transport['receivable']}}</p>
+
+        <p align="auto-left" style="margin-top:30px"><span style="font-weight:bold">订单总数量：</span> {{transport['sell_amount']}}，<span style="font-weight:bold">订单已发货数量：</span>{{transport['transported_amount']}}</p>
+
         <p align="auto-left" style="margin-top:30px"><span style="font-weight:bold">司机姓名：</span>{{transport['driver_name']}}，<span style="font-weight:bold">电话：</span>{{transport['driver_cellphone']}}，<span style="font-weight:bold">目的地：</span>{{transport['address']}}</p>
 
   <p align="right" style="margin-top:30px">时间：{{transport['create_time']}}</p>

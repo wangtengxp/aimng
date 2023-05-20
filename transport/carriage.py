@@ -74,7 +74,7 @@ def printCarriage(id):
     db = get_db()
     transport = db.execute(
         'SELECT tsp.id,tsp.sell_record_id, tsp.amount,tsp.product_price, tsp.address,tsp.driver_name,tsp.driver_cellphone,tsp.driver_liscense,tsp.create_time,'
-        'prod_def.name as product_name,prod_def.unit,cst.name as customer_name,cst.receivable'
+        'prod_def.name as product_name,prod_def.unit,cst.name as customer_name,cst.receivable,sr.amount as sell_amount,sr.transported_amount as transported_amount'
         ' FROM transport tsp left join sell_record sr on tsp.sell_record_id=sr.id left join product_def prod_def on sr.product_id=prod_def.id left join customer cst on sr.customer_id=cst.id'
         ' WHERE tsp.id =?',(id,)
     ).fetchone()
@@ -121,10 +121,6 @@ def create(sellRecordId):
                 return redirect(url_for('carriage.index'))
 
             db.execute('update sell_record set transported_amount=? where id=?',(newTransportedAmount,sell_record_id))
-            #减少库存
-            # sellProduct = db.execute('SELECT inventory from product_def where id=?',(productId,)).fetchone()
-            # productInventory = float(sellProduct['inventory'])
-            # db.execute('UPDATE product_def set inventory=? where id=?',(productInventory-amount,productId))
             #增加客户应收
             customer = db.execute('SELECT receivable from customer where id=?',(customerId,)).fetchone()
             customerReceivable = float(customer['receivable'])
@@ -135,7 +131,7 @@ def create(sellRecordId):
     # sellRecords = db.execute('select id from sell_record order by id desc').fetchall()
 
     sellRecords = db.execute(
-        'SELECT sr.id, sr.create_time, sr.amount,pd.name as product_name,sl.name as seller_name,cst.name as customer_name,sr.transported_amount as transported_amount'
+        'SELECT sr.id, sr.create_time, sr.amount,pd.name as product_name,pd.inventory as product_inventory,sl.name as seller_name,cst.name as customer_name,cst.receivable as customer_receivable,sr.transported_amount as transported_amount'
         ' FROM sell_record sr left join product_def pd on sr.product_id=pd.id left join seller sl on sr.seller_id= sl.id left join customer cst on sr.customer_id=cst.id'
         ' ORDER BY sr.id DESC'
     ).fetchall()
