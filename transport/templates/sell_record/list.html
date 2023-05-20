@@ -60,7 +60,7 @@
             <div class="layui-table-cell laytable-cell-1-0-10">
               {% if sellRecord['status']=='INIT' %}
               <a href="{{ url_for('carriage.create',sellRecordId=sellRecord['id']) }}" class="layui-btn">发货</a>
-              <button class="layui-btn" onclick="returnProduct('{{sellRecord['id']}}','{{sellRecord['product_name']}}')">退货</button>
+              <button class="layui-btn" onclick="returnProduct('{{sellRecord['id']}}','{{sellRecord['product_id']}}','{{sellRecord['product_name']}}')">退货</button>
               {%endif%}
             <input type="button" class="layui-btn layui-btn" onclick="deleteSellRecord({{sellRecord['id']}})" value="删除" id="{{sellRecord['id']}}" />
 
@@ -82,10 +82,17 @@
         </div>
       </div>
       <input type="text" name="sellRecordId" id="sellRecordId" autocomplete="off" class="layui-input" style="display:none;">
+      <input type="text" name="productId" id="productId" autocomplete="off" class="layui-input" style="display:none;">
       <div class="layui-form-item">
         <label class="layui-form-label">退款金额(元)</label>
         <div class="layui-input-block">
           <input type="text" name="return_money" autocomplete="off" placeholder="请输入退款金额" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">退货数量</label>
+        <div class="layui-input-block">
+          <input type="text" name="return_product_amount" autocomplete="off" placeholder="请输入退货数量" class="layui-input">
         </div>
       </div>
       <div class="layui-form-item">
@@ -108,12 +115,13 @@
 
 <script type="text/javascript">
 
-function returnProduct(id,name){
+function returnProduct(id,productId,name){
 
   layui.use(['layer', 'form'], function(){
       var layer = layui.layer;
       var form = layui.form;
       $("#sellRecordId").attr("value",id);
+      $("#productId").attr("value",productId);
   form.render();
     layer.open({
               type: 1,

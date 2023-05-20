@@ -22,7 +22,7 @@ def index():
 def accountsDetail(customerId):
     db = get_db()
     if customerId>0:
-        accounts = db.execute('select cus_acc.id,cus_acc.amount,cus_acc.amount_type,cus_acc.create_time,cst.name from customer_accounts cus_acc'
+        accounts = db.execute('select cus_acc.id,cus_acc.amount,cus_acc.amount_type,cus_acc.create_time,cus_acc.status as acc_status,cst.name from customer_accounts cus_acc'
                               ' left join customer cst on cus_acc.customer_id=cst.id where customer_id=?',(customerId,)).fetchall()
         return render_template('customer/detail.html',accounts=accounts)
     accounts = db.execute(
@@ -72,7 +72,7 @@ def create():
 @login_required
 def receiveMoney():
     id = request.form['id']
-    print('receiveMoney:%s', id)
+    print('receiveMoney,id2:%s', id)
     money = float(request.form['money'])
     print('receiveMoney:%s', money)
 
@@ -84,9 +84,27 @@ def receiveMoney():
         flash(error)
     else:
         db = get_db()
-        #新建账务明细
-        db.execute('insert into customer_accounts (customer_id,entity_type,entity_id,amount,amount_type,create_time)'
-                   ' VALUES (?,?,?,?,?,?)',(id,'CUSTOMER',id,money,'PAYMENT',time.strftime('%Y-%m-%d %H:%M:%S')))
+        #先查询下是否有未入账的款项，如果有，并且金额匹配，就把状态改为已入账，并更新应收总额
+        notIntoAccounts = db.execute('select id,amount from customer_accounts where customer_id=? and status="NOT_INTO_ACCOUNT"',(id,)).fetchall()
+        print('notIntoAccounts:%s', len(notIntoAccounts))
+        if notIntoAccounts is None:
+            print('notIntoAccounts is none')
+        #匹配的未入账的款项
+        matchNotIntoAccountId=None
+        for accountDetail in notIntoAccounts:
+            detailDict = dict(accountDetail)
+            notIntoAccountAmount=float(detailDict['amount'])
+            diff = abs(money-notIntoAccountAmount)
+            if diff<0.001:
+                matchNotIntoAccountId=accountDetail['id']
+        if matchNotIntoAccountId is not None:
+            #有匹配的未入账的款项，更改为已入账
+            db.execute('update customer_accounts set status=? where id=?',('INTO_ACCOUNT',matchNotIntoAccountId))
+        else:
+            #新建账务明细
+            db.execute('insert into customer_accounts (customer_id,entity_type,entity_id,amount,amount_type,create_time)'
+                       ' VALUES (?,?,?,?,?,?)',(id,'CUSTOMER',id,money,'PAYMENT',time.strftime('%Y-%m-%d %H:%M:%S')))
+        #查询总账，并更新金额
         customerRow = db.execute('SELECT receivable from customer where id= ?', (id,)).fetchone()
         receivable = float(customerRow['receivable'])
         db.execute('UPDATE customer set receivable=? where id=?', (receivable-money, id))

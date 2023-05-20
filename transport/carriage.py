@@ -74,8 +74,8 @@ def printCarriage(id):
     db = get_db()
     transport = db.execute(
         'SELECT tsp.id,tsp.sell_record_id, tsp.amount,tsp.product_price, tsp.address,tsp.driver_name,tsp.driver_cellphone,tsp.driver_liscense,tsp.create_time,'
-        'prod_def.name as product_name,prod_def.unit'
-        ' FROM transport tsp left join sell_record sr on tsp.sell_record_id=sr.id left join product_def prod_def on sr.product_id=prod_def.id'
+        'prod_def.name as product_name,prod_def.unit,cst.name as customer_name,cst.receivable'
+        ' FROM transport tsp left join sell_record sr on tsp.sell_record_id=sr.id left join product_def prod_def on sr.product_id=prod_def.id left join customer cst on sr.customer_id=cst.id'
         ' WHERE tsp.id =?',(id,)
     ).fetchone()
     return render_template('carriage/printCarriage.html', transport=transport)

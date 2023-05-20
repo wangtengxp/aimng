@@ -12,6 +12,7 @@
           <th>客户名称</th>
           <th>金额</th>
           <th>类型</th>
+          <th>状态</th>
           <th>时间</th>
           <th>操作</th>
         </tr>
@@ -25,6 +26,11 @@
           <td>预付款</td>
           {%else%}
           <td>付款</td>
+          {%endif%}
+          {% if account['acc_status']=='NOT_INTO_ACCOUNT' %}
+          <td>未入账</td>
+          {%else%}
+          <td>已入账</td>
           {%endif%}
           <td>{{account['create_time']}}</td>
           <td><a href="{{url_for('customer.printDetail',accountsId=account['id'])}}" class="layui-btn"  lay-event="edit">打印预览</a></td>
